@@ -72,6 +72,9 @@ switch($_GET['action']) {
 		}
 		
 	case 'detail':
+		if(isset($_POST['savesettings']) && $_POST['savesettings']==1) {
+			$own->updateDetails($_GET['id'], $_POST);
+		}
 		$data = $own->getDetail($_GET['id']);
 		
 		if($data['i_public']==-1 && me()!=$data['i_u_fk']) {
@@ -86,6 +89,10 @@ switch($_GET['action']) {
 		$tplContent->setVariable($data);
 		$tplContent->setVariable("comments", $comments);
 		$tplContent->setVariable("id", $_GET['id']);
+		
+		$imgsrc = $own->getScaled($data['i_file'], 500,500);
+		$tplContent->setVariable("imgsrc", $imgsrc);
+		
 		$html = $tplContent->get('tpl.detail.php');
 		break;
 	

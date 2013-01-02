@@ -56,9 +56,18 @@ class ownStaGram {
 			echo "<hr/>";
 			exit;
 		}
+		if(!is_writable(projectPath.'/data/cache')) {
+			echo "<hr/>";
+			echo("data/cache-folder not writable!");
+			echo "<hr/>";
+			exit;
+		}
 		
 		if(!file_exists(projectPath.'/data/index.html')) {
 			touch(projectPath.'/data/index.html');
+		}
+		if(!file_exists(projectPath.'/data/cache/index.html')) {
+			touch(projectPath.'/data/cache/index.html');
 		}
 		
 	}
@@ -226,9 +235,43 @@ class ownStaGram {
 		$this->DC->sendQuery("DELETE FROM ost_images WHERE i_pk='".(int)$data['i_pk']."' ");
 	}
 	
+	public function getScaled($fn, $w, $h) {
+		
+		if(rand(0,100)>80) $this->unlinkOld();
+		
+		$W = (int)$w;if($W<10) $W = 100;
+		$H = (int)$h;if($H<10) $H = 100;
+		$im = imageCreateTrueColor($W,$H);
+		$orig = imageCreateFromJpeg(projectPath.'/data/'.$fn);
+		
+		$wh = imageSx($orig);
+		if(imageSy($orig)<$wh) $wh = imageSy($orig);
+		$cn = 'data/cache/'.md5($fn.$w.$h).".jpg";
+		imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $H, $wh, $wh);
+		imageJpeg($im, projectPath.'/'.$cn, 90);
+		return $cn;
+		
+	}
+	public function unlinkOld() {
+		$G = glob(projectPath.'/data/*.jpg');
+		for($i=0;$i<count($G);$i++) {
+			if(filemtime($G[$i])<time()-60*60*24*30) {
+				unlink($G[$i]);
+			}
+		}
+	}
+
 	public function getDetail($id) {
 		$data = $this->DC->getByQuery("SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ");
 		return $data;
+	}
+	public function updateDetails($id, $data) {
+		$detail = $this->getDetail($id);
+		$new = array(
+				'i_title' => htmlspecialchars(stripslashes($data['title'])),
+				'i_public' => (int)$data['public']
+				);
+		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}
 	public function hitPhoto($u_fk, $data) {
 		$Q = "SELECT * FROM ost_views WHERE v_u_fk='".(int)$u_fk."' AND v_i_fk='".(int)$data["i_pk"]."' ";
