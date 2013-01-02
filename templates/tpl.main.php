@@ -96,6 +96,12 @@ echo "</pre>";
         </p>
         </div>
         
+        <?php if(me()>0 && getS('user', 'u_email')==ownStaGramAdmin) { ?>
+        <center>
+         	<span id='versioncheck'></span>
+        </center>
+        <?php } ?>
+        
         <div style='float:right;'>
         <p>
         <a href='https://play.google.com/store/apps/details?id=org.apache.cordova.ownstagram' target="_blank">GET IT ON Google Play</a>
@@ -127,6 +133,24 @@ $(function() {
     });
 });
 </script>
+<?php } ?>
+
+<?php if(me()>0 && getS('user', 'u_email')==ownStaGramAdmin) { ?>
+        <script>
+		$(function() {
+				$.ajax({
+						"url": "http://www.mad5.de/ownstagram/versioncheck.php",
+						"type": "get",
+						"data": {"version": <?php echo $GLOBALS["own"]->VERSION; ?>},
+						"dataType": "jsonp",
+						"success": function(data) {
+							if(data.result==1) {
+								$('#versioncheck').html('new version available!');
+							}
+						}
+				});
+		});
+        </script>
 <?php } ?>
 
 </body>
