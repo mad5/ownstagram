@@ -114,7 +114,7 @@ echo "</pre>";
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/ownstagram.js"></script>
 
-<?php if($_GET['action']=='overview') { ?>
+<?php if(isset($_GET['action']) && $_GET['action']=='overview') { ?>
 <script src="resources/lazyloader.js"></script>
 
 <script>
