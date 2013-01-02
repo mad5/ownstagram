@@ -93,6 +93,8 @@ switch($_GET['action']) {
 		$imgsrc = $own->getScaled($data['i_file'], 500,500);
 		$tplContent->setVariable("imgsrc", $imgsrc);
 		
+		$tpl->setVariable("detailtitle", $data['i_title']." @ ");
+		
 		$html = $tplContent->get('tpl.detail.php');
 		break;
 	

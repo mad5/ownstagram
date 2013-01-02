@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>OwnStaGram</title>
+	<title><?php echo $VARS->get('detailtitle'); ?>OwnStaGram</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<meta name="description" content="OwnStaGram is a free photo-sharing software which allows to upload photos from within this site and an android-app." />
