@@ -9,7 +9,10 @@
           <?php $i=0;foreach($VARS->get('list') as $key => $img) {  ?>
             <div class="span3">
 		    <h3><?php echo date("d.m.Y", strtotime($img->get('i_date'))); ?></h3>
-		    <p><a href='index.php?action=detail&id=<?php echo $img->get('id');?>'><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /></a></p>
+		    <p><a href='index.php?action=detail&id=<?php echo $img->get('id');?>'><?php 
+		    if($i<9) { ?><img src='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
+		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
+		    } ?></a></p>
 		    <?php if((int)$img->get('views')>0) { ?>
 			    <div style="float:left;font-size:8pt;">
 				<?php echo (int)$img->get('views');?> view<?php if((int)$img->get('views')>1) echo "s";?>
