@@ -113,5 +113,21 @@ echo "</pre>";
 <script src="resources/jquery.min.js"></script>
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/ownstagram.js"></script>
+
+<?php if($_GET['action']=='overview') { ?>
+<script src="resources/lazyloader.js"></script>
+
+<script>
+$(function() {
+  $("img.lazy").lazyloader({
+        effect : "fadeIn",
+        threshold : 100,
+        imgSrcAttr : 'imgsrc',
+        beforeLoadCls: 'loading'
+    });
+});
+</script>
+<?php } ?>
+
 </body>
 </html>		

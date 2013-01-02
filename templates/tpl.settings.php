@@ -30,6 +30,9 @@
 <form class="form-signin" onsubmit="ownStaGram.saveSettings(this);return false;">
 	<h2 class="form-signin-heading">Settings</h2>
 	
+	<label>Title</label>
+	<input type="text" class="input-block-level settingform" placeholder="ownStaGram" value="<?php echo $VARS->get('s_title');?>" name="setting_maintitle"><br/>
+	
 	<label>Subtitle</label>
 	<input type="text" class="input-block-level settingform" placeholder="describe your site" value="<?php echo $VARS->get('s_subtitle');?>" name="setting_title"><br/>
 	

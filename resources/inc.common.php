@@ -31,7 +31,7 @@ function getS($name, $field="") {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.3";
+	public $VERSION = "1.4";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -82,6 +82,7 @@ class ownStaGram {
 	public function setSettings() {
 		$S = $this->getSettings();
 		$data = array("s_subtitle" => $_POST["setting_title"],
+			      "s_title" => $_POST["setting_maintitle"],
 			      "s_allowregistration" => $_POST["setting_allow_register"],
 			      "s_allowfriendsstreams" => $_POST["setting_allow_upload"] 
 			      );

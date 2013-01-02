@@ -13,7 +13,9 @@ callAfter um nach SQL noch eine Funktion aufzurufen
 
 $UPDATE_SQL[0] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_welcometext', 'query' => 'ALTER TABLE `ost_settings` ADD `s_welcometext` TEXT NOT NULL ');
 $UPDATE_SQL[1] = array('type' => 'newtable', 'table' => 'ost_views', 'query' => 'CREATE TABLE IF NOT EXISTS `ost_views` (  `v_pk` bigint(20) NOT NULL AUTO_INCREMENT, `v_u_fk` bigint(20) NOT NULL,  `v_i_fk` bigint(20) NOT NULL, `v_date` datetime NOT NULL,   PRIMARY KEY (`v_pk`),  KEY `v_u_fk` (`v_u_fk`,`v_i_fk`) ) ENGINE=InnoDB ');
+$UPDATE_SQL[2] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_title', 'query' => 'ALTER TABLE `ost_settings` ADD `s_title` VARCHAR(50) NOT NULL ');
 	
+
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');
 

@@ -1,7 +1,7 @@
 
         <div class="span9">
           <div class="hero-unit">
-            <h1>OwnStaGram-Users</h1>
+            <h1><?php echo ($VARS->get('s_title')=='' ? 'OwnStaGram-users' : $VARS->get('s_title')."-users"); ?> </h1>
           </div>
           
           <div class="row-fluid">

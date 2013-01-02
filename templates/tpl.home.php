@@ -2,7 +2,7 @@
         <div class="span9">
           <div class="hero-unit">
           
-            <h1>My OwnStaGram!</h1>
+          	<h1><?php echo ($VARS->get('s_title')=='' ? 'My ownStaGram!' : $VARS->get('s_title')); ?> </h1>
             <h3>
             the self-hosted photosharing-platform.
             </h3>
