@@ -61,8 +61,24 @@ switch($_GET['action']) {
 		$html = $tplContent->get('tpl.overview.php');
 		break;
 	
+	case 'delete':
+		$data = $own->getDetail($_GET['id']);
+		if(me()>0 && $data['i_u_fk']==me()) {
+			$own->delete($data);
+			header("location: index.php?action=overview");
+			exit;
+		} else {
+			die("no access!");
+		}
+		
 	case 'detail':
 		$data = $own->getDetail($_GET['id']);
+		
+		if($data['i_public']==-1 && me()!=$data['i_u_fk']) {
+			die('No access to this picture!');
+			exit;
+		}
+			
 		if(me()>0 && getS('user', 'u_email')!=ownStaGramAdmin) {
 			$own->hitPhoto(me(), $data);
 		}

@@ -50,6 +50,17 @@ class ownStaGram {
 			chmod(projectPath.'/data/cache', 0775);
 		}
 		
+		if(!is_writable(projectPath.'/data')) {
+			echo "<hr/>";
+			echo("data-folder not writable!");
+			echo "<hr/>";
+			exit;
+		}
+		
+		if(!file_exists(projectPath.'/data/index.html')) {
+			touch(projectPath.'/data/index.html');
+		}
+		
 	}
 	
 	public function getSettings() {
@@ -200,7 +211,8 @@ class ownStaGram {
 		$data = array('i_u_fk' => (int)$u_pk,
 				'i_date' => now(),
 				'i_file' => $fn,
-				'i_title' => htmlspecialchars(stripslashes($_POST['title']))
+				'i_title' => htmlspecialchars(stripslashes($_POST['title'])),
+				'i_public' => (int)$_POST['public']
 			);
 		$pk = $this->DC->insert($data, 'ost_images');
 		
@@ -209,8 +221,13 @@ class ownStaGram {
 		                             
 	}
 	
+	public function delete($data) {
+		unlink('data/'.$data["i_file"]);
+		$this->DC->sendQuery("DELETE FROM ost_images WHERE i_pk='".(int)$data['i_pk']."' ");
+	}
+	
 	public function getDetail($id) {
-		$data = $this->DC->getByQuery("SELECT * FROM ost_images WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ");
+		$data = $this->DC->getByQuery("SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ");
 		return $data;
 	}
 	public function hitPhoto($u_fk, $data) {

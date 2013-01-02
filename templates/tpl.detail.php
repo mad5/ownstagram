@@ -4,6 +4,14 @@
                   <a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a> 
                   	
                   </div>
+                  
+                  <?php if($VARS->get('i_u_fk')==me()) { ?>
+			  <div class="well sidebar-nav" id='links'>
+			  
+			  <a href='#' onclick="if(confirm('delete image?')) { window.location='index.php?action=delete&id=<?php echo $VARS->get('id');?>' } return false;"  id='maillink' class="btn btn-link"><i class="icon-trash"></i> delete image</a> 
+				
+			  </div>
+                  <?php } ?>
         </div>
 
         <div class="span6">

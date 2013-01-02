@@ -19,7 +19,16 @@
             	<label>title</label>
             	<input type="text" name="title" />
             	<label class="checkbox">
-            		<input type="checkbox"> make picture public
+            		<input type="radio" name="public" value="0" checked /> show picture if url is known<br/>
+            		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>You can share the url to the image. Everyone who gets the url can see the image.</span>
+            	</label>
+            	<label class="checkbox">
+            		<input type="radio" name="public" value="1" /> make picture public<br/>
+            		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>use picture for collages on the front-page.</span>
+            	</label>
+            	<label class="checkbox">
+            		<input type="radio" name="public" value="-1" /> make picture private<br/>
+            		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>only you can see the image.</span>
             	</label>
             	<br/>
                 <p><button class="btn btn-primary btn-large">Upload picture &raquo;</button></p>
