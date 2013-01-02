@@ -319,6 +319,32 @@ class ownStaGram {
 		return $img;
 	}
 	
+	public function getUserList($page=0) {
+		//$pp = 20;
+		$Q = "SELECT * FROM ost_user ORDER BY u_email "; // LIMIT ".$page.",".$pp;
+		$U = $this->DC->getAllByQuery($Q);
+		return $U;
+	}
+	public function getUserData($u_pk) {
+		$Q = "SELECT * FROM ost_user WHERE u_pk='".(int)$u_pk."' ";
+		$data = $this->DC->getByQuery($Q);
+		return $data;
+	}
+	public function setUserData($u_pk, $data) {
+		$user = array("u_email" => $data["email"]);
+		if($data['password']!="" && $data['password']==$data['password2']) {
+			$user["u_password"] = md5('a4916ab01df010a042c612eb057b4ac23e79530d555354c4a92e1b24301b964f0f7ecd66143c4093ea1470efcfa33042'.$data['password']);
+		}
+		if(isset($data['confirm'])) $user['u_confirmed '] = now();
+		else $user['u_confirmed '] = "0000-00-00 00:00:00";
+		if($u_pk==-1) {
+			$user["u_registered"] = now();
+			$this->DC->insert($user, "ost_user");
+		} else {
+			$this->DC->update($user, "ost_user", $u_pk, "u_pk");
+		}
+	}
+	
 }
 
 $own = new ownStaGram();

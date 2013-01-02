@@ -30,7 +30,35 @@ switch($_GET['action']) {
 			imageJpeg($im, NULL, 90);
 			exit;
 			break;
+	case 'newuser':
+		
+		if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
+			$own->setUserData(-1, $_POST['FORM']);
+			header("location: index.php?action=users");
+			exit;
+		}
+		
+		$tplContent->setVariable("view", "edit");
+		$html = $tplContent->get('tpl.users.php');
+		
+		break;
+		
 	case 'users':
+		if(isset($_GET['id']) && (int)$_GET["id"]>0) {
+			if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
+				$own->setUserData((int)$_GET["id"], $_POST['FORM']);
+				header("location: index.php?action=users");
+				exit;
+			}
+			$edit = $own->getUserData((int)$_GET["id"]);
+			$tplContent->setVariable("view", "edit");
+			$tplContent->setVariable($edit);
+		} else {
+			$list = $own->getUserList();
+			$tplContent->setVariable("view", "list");
+			$tplContent->setVariable("list", $list);
+		}
+		
 		$html = $tplContent->get('tpl.users.php');
 		break;
 	case 'confirmed':
