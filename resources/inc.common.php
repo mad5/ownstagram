@@ -254,10 +254,10 @@ class ownStaGram {
 		
 	}
 	public function unlinkOld() {
-		$G = glob(projectPath.'/data/*.jpg');
+		$G = glob(projectPath.'/data/cache/*.jpg');
 		for($i=0;$i<count($G);$i++) {
 			if(filemtime($G[$i])<time()-60*60*24*30) {
-				unlink($G[$i]);
+				if(file_Exists($G[$i]) && is_file($G[$i])) unlink($G[$i]);
 			}
 		}
 	}
