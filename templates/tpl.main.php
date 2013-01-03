@@ -58,6 +58,7 @@
               		<li><a href="index.php?action=settings">Settings</a></li>
               		<li><a href="index.php?action=users">Users</a></li>
               	<?php } ?>
+              	<li><a href="index.php?action=groups">Groups</a></li>
               <?php } else { ?>
               	 <li><a href="index.php?action=login">Login</a></li>
               	 

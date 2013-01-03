@@ -12,7 +12,9 @@
 			  
 			  <div class="well sidebar-nav">
 			  <form method="post" style='padding-left:20px;'>
-			  		<input type="hidden" name="savesettings" value="1" />
+			  
+		  		  <input type="hidden" name="savesettings" value="1" />
+		  		  
 				  <fieldset>
 					<legend>Photo-settings</legend>
 					
@@ -34,6 +36,14 @@
 						<input type="radio" name="public" value="-1" <?php if($VARS->get('i_public')==-1) { echo "checked"; } ?>  /> make picture private<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>only you can see the image.</span>
 					</label>
+					
+					<label>Group</label>
+						<select name="group">
+							<option value='0'>default</option>
+							<?php foreach($VARS->get('groups') as $key => $group) { ?>
+								<option value='<?php echo $group->get('g_pk');?>' <?php if($VARS->get('i_g_fk')==$group->get('g_pk')) echo 'selected'; ?> ><?php echo $group->get('g_name');?></option>
+							<?php } ?>
+						</select>
 					
 					<br/>
 					<p><button class="btn">save changes &raquo;</button></p>

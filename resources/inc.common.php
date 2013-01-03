@@ -28,6 +28,10 @@ function getS($name, $field="") {
 	}
 	return $_SESSION[$name];
 }
+function jump2($action='') {
+	header("location: index.php?action=".$action);
+	exit;
+}
 
 class ownStaGram {
 	public $DC;
@@ -270,7 +274,8 @@ class ownStaGram {
 		$detail = $this->getDetail($id);
 		$new = array(
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
-				'i_public' => (int)$data['public']
+				'i_public' => (int)$data['public'],
+				'i_g_fk' => (int)$data['group']
 				);
 		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}
@@ -345,6 +350,27 @@ class ownStaGram {
 		}
 	}
 	
+	
+	
+	public function getGroupList($page=0) {
+		//$pp = 20;
+		$Q = "SELECT * FROM ost_groups WHERE g_u_fk='".me()."' ORDER BY g_name "; // LIMIT ".$page.",".$pp;
+		$U = $this->DC->getAllByQuery($Q);
+		return $U;
+	}
+	public function getGroupData($g_pk) {
+		$Q = "SELECT * FROM ost_groups WHERE g_pk='".(int)$g_pk."' AND g_u_fk='".me()."' ";
+		$data = $this->DC->getByQuery($Q);
+		return $data;
+	}
+	public function setGroupData($g_pk, $data) {
+		$group = array("g_name" => $data["groupname"], "g_u_fk" => me());
+		if($g_pk==-1) {
+			$this->DC->insert($group, "ost_groups");
+		} else {
+			$this->DC->update($group, "ost_groups", $g_pk, "g_pk");
+		}
+	}	
 }
 
 $own = new ownStaGram();

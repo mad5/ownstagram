@@ -31,7 +31,7 @@ switch($_GET['action']) {
 			exit;
 			break;
 	case 'newuser':
-		
+		if(me()<=0) jump2();
 		if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
 			$own->setUserData(-1, $_POST['FORM']);
 			header("location: index.php?action=users");
@@ -44,6 +44,7 @@ switch($_GET['action']) {
 		break;
 		
 	case 'users':
+		if(me()<=0) jump2();
 		if(isset($_GET['id']) && (int)$_GET["id"]>0) {
 			if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
 				$own->setUserData((int)$_GET["id"], $_POST['FORM']);
@@ -61,6 +62,41 @@ switch($_GET['action']) {
 		
 		$html = $tplContent->get('tpl.users.php');
 		break;
+		
+	case 'newgroup':
+		if(me()<=0) jump2();
+		if(isset($_POST["savegroup"]) && $_POST["savegroup"]==1) {
+			$own->setGroupData(-1, $_POST['FORM']);
+			header("location: index.php?action=groups");
+			exit;
+		}
+		
+		$tplContent->setVariable("view", "edit");
+		$html = $tplContent->get('tpl.groups.php');
+		
+		break;
+		
+	case 'groups':
+		if(me()<=0) jump2();
+		if(isset($_GET['id']) && (int)$_GET["id"]>0) {
+			if(isset($_POST["savegroup"]) && $_POST["savegroup"]==1) {
+				$own->setGroupData((int)$_GET["id"], $_POST['FORM']);
+				header("location: index.php?action=groups");
+				exit;
+			}
+			$edit = $own->getGroupData((int)$_GET["id"]);
+			$tplContent->setVariable("view", "edit");
+			$tplContent->setVariable($edit);
+		} else {
+			$list = $own->getGroupList();
+			$tplContent->setVariable("view", "list");
+			$tplContent->setVariable("list", $list);
+		}
+		
+		$html = $tplContent->get('tpl.groups.php');
+		break;
+		
+		
 	case 'confirmed':
 		$html = $tplContent->get('tpl.register_confirm.php');
 		break;
@@ -80,16 +116,15 @@ switch($_GET['action']) {
 		break;
 	
 	case 'overview':
-		if(me()<=0) {
-			header("location: index.php");
-			exit;
-		}
+		if(me()<=0) jump2();
+			
 		$list = $own->getList(me());
 		$tplContent->setVariable("list", $list);
 		$html = $tplContent->get('tpl.overview.php');
 		break;
 	
 	case 'delete':
+		if(me()<=0) jump2();
 		$data = $own->getDetail($_GET['id']);
 		if(me()>0 && $data['i_u_fk']==me()) {
 			$own->delete($data);
@@ -121,16 +156,16 @@ switch($_GET['action']) {
 		$imgsrc = $own->getScaled($data['i_file'], 500,500);
 		$tplContent->setVariable("imgsrc", $imgsrc);
 		
+		$groups = $own->getGroupList();
+		$tplContent->setVariable("groups", $groups);
+		
 		$tpl->setVariable("detailtitle", $data['i_title']." @ ");
 		
 		$html = $tplContent->get('tpl.detail.php');
 		break;
 	
 	case 'upload':
-		if(me()<=0) {
-			header("location: index.php");
-			exit;
-		}
+		if(me()<=0) jump2();
 		if(isset($_POST['upload']) && $_POST['upload']==1) {
 			
 			$res = $own->upload($_FILES, me());
@@ -142,11 +177,9 @@ switch($_GET['action']) {
 		break;
 	case 'settings':
 		if(me()<=0 || getS('user', 'u_email')!=ownStaGramAdmin) {
-			header("location: index.php");
-			exit;
+			jump2();
 		}
 		$S = $own->getSettings();
-		#vd($S);
 		$tplContent->setVariable($S);
 		$html = $tplContent->get('tpl.settings.php');
 		
