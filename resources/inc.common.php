@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.5";
+	public $VERSION = "1.7";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -194,7 +194,15 @@ class ownStaGram {
 			);
 			$pk = $this->DC->insert($data, 'ost_images');
 			
-			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
+			$G = $this->getGroupList();
+			$G2 = array();
+			for($i=0;$i<count($G);$i++) {
+				$G2[] = array("gid" => $G[$i]["g_pk"],
+						"name" => $G[$i]["g_name"]
+						);
+			}
+			
+			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']), "groups" => $G2 );
 			return $res;
 		}
 	}
@@ -203,7 +211,12 @@ class ownStaGram {
 		$data = $this->getDetail($_POST['ownid']);
 		if($data!="") {
 			$S = array("i_public" => (int)$_POST['public'],
-				   "i_title" => htmlspecialchars(stripslashes($_POST['title'])) );
+				   "i_title" => htmlspecialchars(stripslashes($_POST['title'])),
+				   "i_g_fk" => (int)$_POST["group"],
+				   "i_lat" => $_POST["lat"],
+				   "i_lng" => $_POST["lng"],
+				   "i_location" => $_POST["location"],
+				   );
 			$this->DC->update($S, "ost_images", $data['i_pk'], 'i_pk');
 			$res = array("result" => 1);
 		} else {

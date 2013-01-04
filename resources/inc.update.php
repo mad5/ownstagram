@@ -17,8 +17,8 @@ $UPDATE_SQL[2] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' 
 $UPDATE_SQL[3] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE IF NOT EXISTS ost_groups ( `g_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `g_name` VARCHAR( 50 ) NOT NULL , `g_u_fk` BIGINT NOT NULL ) ENGINE = InnoDB');
 $UPDATE_SQL[4] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_g_fk', 'query' => 'ALTER TABLE `ost_images` ADD `i_g_fk` bigint(20) NOT NULL ');
 
-$UPDATE_SQL[5] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lat', 'query' => 'ALTER TABLE `ost_images` ADD `i_lat` double() NOT NULL ');
-$UPDATE_SQL[6] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lng', 'query' => 'ALTER TABLE `ost_images` ADD `i_lng` double() NOT NULL ');
+$UPDATE_SQL[5] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lat', 'query' => 'ALTER TABLE `ost_images` ADD `i_lat` double NOT NULL ');
+$UPDATE_SQL[6] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lng', 'query' => 'ALTER TABLE `ost_images` ADD `i_lng` double NOT NULL ');
 $UPDATE_SQL[7] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_location', 'query' => 'ALTER TABLE `ost_images` ADD `i_location` varchar(255) NOT NULL ');
 
 $STEP = -1;
