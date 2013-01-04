@@ -68,6 +68,18 @@
         </div><!--/span-->
         
         <div class="span3">
+        
+        <?php if($VARS->get('i_location')!="") { ?>
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Location</li>
+              <p class="muted">
+              	<?php echo $VARS->get('i_location'); ?>
+              </p>
+            </ul>
+         </div>
+        <?php } ?>
+         
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Comments</li>
