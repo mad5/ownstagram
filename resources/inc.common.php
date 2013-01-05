@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.7";
+	public $VERSION = "1.7.1";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -202,7 +202,7 @@ class ownStaGram {
 						);
 			}
 			
-			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']), "groups" => $G2 );
+			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']), "imgid" => md5($data['i_date'].$data['i_file']), "groups" => $G2 );
 			return $res;
 		}
 	}
@@ -285,6 +285,7 @@ class ownStaGram {
 	}
 	public function updateDetails($id, $data) {
 		$detail = $this->getDetail($id);
+		if($detail['i_u_fk']!=me()) die("no access!");
 		$new = array(
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
 				'i_public' => (int)$data['public'],
@@ -379,6 +380,8 @@ class ownStaGram {
 	public function setGroupData($g_pk, $data) {
 		$group = array("g_name" => $data["groupname"], "g_u_fk" => me());
 		if($g_pk==-1) {
+			$GD = $this->getGroupData($g_pk);
+			if($GD["g_u_fk"]!=me()) die("no access!");
 			$this->DC->insert($group, "ost_groups");
 		} else {
 			$this->DC->update($group, "ost_groups", $g_pk, "g_pk");

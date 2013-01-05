@@ -31,7 +31,7 @@ switch($_GET['action']) {
 			exit;
 			break;
 	case 'newuser':
-		if(me()<=0) jump2();
+		if(me()<=0 || getS('user', 'u_email')!=ownStaGramAdmin) jump2();
 		if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
 			$own->setUserData(-1, $_POST['FORM']);
 			header("location: index.php?action=users");
@@ -44,7 +44,7 @@ switch($_GET['action']) {
 		break;
 		
 	case 'users':
-		if(me()<=0) jump2();
+		if(me()<=0 || getS('user', 'u_email')!=ownStaGramAdmin) jump2();
 		if(isset($_GET['id']) && (int)$_GET["id"]>0) {
 			if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
 				$own->setUserData((int)$_GET["id"], $_POST['FORM']);
