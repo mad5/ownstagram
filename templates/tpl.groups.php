@@ -14,12 +14,14 @@
 	<table class="table table-hover">
 		<tr>
 			<th>groupname</th>
+			<th style="text-align:center;">pictures assigned</th>
 			<th></th>
 		</tr>
 	<?php foreach($VARS->get('list') as $key => $group) { ?>
 		<tr>	
 		
-		<td><?php echo $group->get('g_name');?></td>
+			<td><?php echo $group->get('g_name');?></td>
+			<td style="text-align:center;"><?php echo $group->get('pictures');?></td>
 			<td><a href='index.php?action=groups&id=<?php echo $group->get('g_pk');?>' class="icon-pencil">&nbsp;</a></td>
 		</tr>
 	<?php } ?>

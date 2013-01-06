@@ -6,15 +6,18 @@ include_once 'resources/inc.common.php';
 $settings = $own->getSettings();
 
 $res = array("result" => 0);
-switch($_POST['action']) {
+switch($_REQUEST['action']) {
+	case 'version' : 
+			$res = array("result" => 1, "version" => $own->VERSION);
+			break;
 	case 'comment' :
-			$res = $own->addComment($_POST['id'], $_POST['comment']);
+			$res = $own->addComment($_REQUEST['id'], $_REQUEST['comment']);
 			break; 	
 	case 'register' :
-			$res = $own->register($_POST['email'], $_POST['password']);
+			$res = $own->register($_REQUEST['email'], $_REQUEST['password']);
 			break; 	
 	case 'login' :
-			$res = $own->login($_POST['email'], $_POST['password']);
+			$res = $own->login($_REQUEST['email'], $_REQUEST['password']);
 			break; 	
 	case 'logout' :
 			$res = $own->logout();
@@ -32,7 +35,12 @@ switch($_POST['action']) {
 				$res = $own->setSettings();
 			}
 			break;
-
+	default: 
+			$res = array("result" => 0, "error" => "API-Command unknown!");
 }
 
-echo json_encode($res);
+if(isset($_GET['callback'])) {
+	echo $_GET['callback']."(".json_encode($res).");";
+} else {
+	echo json_encode($res);
+}

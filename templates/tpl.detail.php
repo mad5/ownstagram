@@ -56,7 +56,33 @@
         <div class="span6">
         <div class="hero-unit" style="padding-top:15px;">
           
-          <h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
+          <div style="float:left;">
+          	<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
+          </div>
+          
+          <?php if(me()==$VARS->get('i_u_fk')) { ?>
+          <div style="float:right;">
+          	
+          	<?php foreach($VARS->get('next') as $key => $img) { ?>
+          		<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
+          		<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
+          		</a>
+          	<?php } ?>
+          
+          	<a href='index.php?action=detail&id=<?php echo $VARS->get("id");?>'>
+          		<img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=50' width=50 height=50 />
+          	</a>
+
+          	<?php foreach($VARS->get('prev') as $key => $img) { ?>
+          		<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
+          		<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
+          		</a>
+          	<?php } ?>
+          	
+          </div>
+          <?php } ?>
+          
+          <div style="clear:both;"></div>
           <?php if($VARS->get('i_title')!="") { ?>
           	  <b><?php echo $VARS->get('i_title');?></b><br/>
           <?php } ?>

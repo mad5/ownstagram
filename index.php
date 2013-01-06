@@ -56,6 +56,9 @@ switch($_GET['action']) {
 			$tplContent->setVariable($edit);
 		} else {
 			$list = $own->getUserList();
+			for($i=0;$i<count($list);$i++) {
+				$list[$i]["pictures"] = (int)$own->picturesForUser($list[$i]["u_pk"]);
+			}
 			$tplContent->setVariable("view", "list");
 			$tplContent->setVariable("list", $list);
 		}
@@ -89,6 +92,9 @@ switch($_GET['action']) {
 			$tplContent->setVariable($edit);
 		} else {
 			$list = $own->getGroupList();
+			for($i=0;$i<count($list);$i++) {
+				$list[$i]["pictures"] = (int)$own->picturesForGroups($list[$i]["g_pk"]);
+			}
 			$tplContent->setVariable("view", "list");
 			$tplContent->setVariable("list", $list);
 		}
@@ -145,9 +151,17 @@ switch($_GET['action']) {
 			exit;
 		}
 			
-		if(me()>0 && getS('user', 'u_email')!=ownStaGramAdmin) {
+		if(me()>0 && me()!=$data['i_u_fk'] && getS('user', 'u_email')!=ownStaGramAdmin) {
 			$own->hitPhoto(me(), $data);
 		}
+		
+		if(me()>0 && me()==$data['i_u_fk']) {
+			$next = $own->getNextImages($data);
+			$prev = $own->getPrevImages($data);
+			$tplContent->setVariable("next", $next);
+			$tplContent->setVariable("prev", $prev);
+		}
+		
 		$comments = $own->getComments($data['i_pk']);
 		$tplContent->setVariable($data);
 		$tplContent->setVariable("comments", $comments);

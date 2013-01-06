@@ -143,7 +143,7 @@ $(function() {
 				$.ajax({
 						"url": "http://www.mad5.de/ownstagram/versioncheck.php",
 						"type": "get",
-						"data": {"version": <?php echo $GLOBALS["own"]->VERSION; ?>},
+						"data": {"version": "<?php echo $GLOBALS["own"]->VERSION; ?>"},
 						"dataType": "jsonp",
 						"success": function(data) {
 							if(data.result==1) {

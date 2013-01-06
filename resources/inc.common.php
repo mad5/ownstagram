@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.7.1";
+	public $VERSION = "1.7.2";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -304,6 +304,17 @@ class ownStaGram {
 			$this->DC->insert($V, "ost_views");
 		}
 	}
+	
+	public function picturesForUser($u_pk) {
+		$Q = "SELECT count(*) FROM ost_images WHERE i_u_fk='".(int)$u_pk."' ";
+		return $this->DC->countByQuery($Q);
+	}
+	
+	public function picturesForGroups($g_pk) {
+		$Q = "SELECT count(*) FROM ost_images WHERE i_g_fk='".(int)$g_pk."' ";
+		return $this->DC->countByQuery($Q);
+	}
+	
 	public function getList($from) {
 		$data = $this->DC->getAllByQuery("SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".(int)$from."' ORDER BY i_date DESC ");
 		for($i=0;$i<count($data);$i++) {
@@ -311,6 +322,17 @@ class ownStaGram {
 			$data[$i]["comments"] = $this->DC->countByQuery("SELECT count(*) FROM ost_comments WHERE co_i_fk='".(int)$data[$i]["i_pk"]."'  ");
 		}
 		return $data;
+	}
+	public function getNextImages($data) {
+		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date>'".$data["i_date"]."' ORDER BY i_date LIMIT 3";
+		$D = $this->DC->getAllByQuery($Q);
+		$D = array_reverse($D);
+		return $D;
+	}
+	public function getPrevImages($data) {
+		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date<'".$data["i_date"]."' ORDER BY i_date DESC LIMIT 3";
+		$D = $this->DC->getAllByQuery($Q);
+		return $D;
 	}
 	public function getComments($i_pk) {
 		$Q = "SELECT * FROM ost_comments
@@ -380,10 +402,10 @@ class ownStaGram {
 	public function setGroupData($g_pk, $data) {
 		$group = array("g_name" => $data["groupname"], "g_u_fk" => me());
 		if($g_pk==-1) {
-			$GD = $this->getGroupData($g_pk);
-			if($GD["g_u_fk"]!=me()) die("no access!");
 			$this->DC->insert($group, "ost_groups");
 		} else {
+			$GD = $this->getGroupData($g_pk);
+			if($GD["g_u_fk"]!=me()) die("no access!");
 			$this->DC->update($group, "ost_groups", $g_pk, "g_pk");
 		}
 	}	
