@@ -409,6 +409,20 @@ class ownStaGram {
 			$this->DC->update($group, "ost_groups", $g_pk, "g_pk");
 		}
 	}	
+	
+	public function getPublics($u_pk=0) {
+		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 ";
+		$Q .= " AND i_u_fk!='".(int)$u_pk."' ";
+		$Q .= " ORDER BY rand() LIMIT 20 ";
+		$I = $this->DC->getAllByQuery($Q);
+		return $I;
+	}
+	public function getOthers($u_pk, $limit=20) {
+		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;
+		$I = $this->DC->getAllByQuery($Q);
+		return $I;
+	}
+	
 }
 
 $own = new ownStaGram();

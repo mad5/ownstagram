@@ -175,6 +175,12 @@ switch($_GET['action']) {
 		
 		$tpl->setVariable("detailtitle", $data['i_title']." @ ");
 		
+		$forthis = $own->getOthers($data['i_u_fk']);
+		$tplContent->setVariable("forthis", $forthis);
+		
+		$others = $own->getPublics($data['i_u_fk']);
+		$tplContent->setVariable("others", $others);
+		
 		$html = $tplContent->get('tpl.detail.php');
 		break;
 	
@@ -198,8 +204,12 @@ switch($_GET['action']) {
 		$html = $tplContent->get('tpl.settings.php');
 		
 		break;
-	default: $html = $tplContent->get('tpl.home.php');
-		 break;
+	default:
+		$public = $own->getPublics(0,50);
+		$tplContent->setVariable("public", $public);
+
+		$html = $tplContent->get('tpl.home.php');
+		break;
 }
 
 

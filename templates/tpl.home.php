@@ -67,6 +67,17 @@
         <div class="span3">
            <div class="row-fluid">
               
+                  <div class="well sidebar-nav">
+		    <ul class="nav nav-list">
+		      <li class="nav-header">Public photos from all users</li>
+		      <?php foreach($VARS->get('public') as $key => $other) { 
+				?><a href='index.php?action=detail&id=<?php echo $other->get("id");?>'><?php 
+				?><img src='index.php?action=image&amp;img=<?php echo md5($other->get('i_date').$other->get('i_file')); ?>&amp;w=47' width=47 height=47 /><?php
+				?></a><?php
+		      } ?>
+		   </ul>
+		  </div>
+
             
           </div><!--/.row -->
         </div><!--/span-->
