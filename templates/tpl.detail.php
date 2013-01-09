@@ -1,13 +1,21 @@
         <div class="span3">
+        	<?php if($VARS->get('i_u_fk')==me()) { ?>
                   <div class="well sidebar-nav" id='links'>
                   
-                  <a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a> 
+                  <a href='index.php?action=overview' onclick="if($('#detailiframe', window.parent.document).length>0) { parent.history.pushState({ }, 'Overview', 'index.php?action=overview'); $('#detailiframe', window.parent.document).remove(); return false;}" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
+                 	 
+                  	
+                  </div>
+                <?php } ?>
+                  <div class="well sidebar-nav" id='links'>
+                  
+                  	<a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('hide=1&', '');H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a> 
                   	
                   </div>
                   
                   <?php if($VARS->get('i_u_fk')==me()) { ?>
 			  <div class="well sidebar-nav">
-			  	<a href='#' onclick="if(confirm('delete image?')) { window.location='index.php?action=delete&id=<?php echo $VARS->get('id');?>' } return false;"  id='maillink' class="btn btn-link"><i class="icon-trash"></i> delete image</a> 
+			  	<a href='#' onclick="if(confirm('delete image?')) { window.top.location='index.php?action=delete&id=<?php echo $VARS->get('id');?>' } return false;"  id='maillink' class="btn btn-link"><i class="icon-trash"></i> delete image</a> 
 			  </div>
 			  
 			  <div class="well sidebar-nav">

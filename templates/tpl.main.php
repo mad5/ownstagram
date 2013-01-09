@@ -23,6 +23,7 @@
 </head>
 <body>
 
+<?php if(!isset($_GET["hide"])) { ?>
 <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -73,7 +74,7 @@
         </div>
       </div>
     </div>
-
+<?php } ?>
 <?php
 /*
 echo "<pre>";
