@@ -204,6 +204,18 @@ switch($_GET['action']) {
 		$html = $tplContent->get('tpl.settings.php');
 		
 		break;
+	case 'profile':
+		if(me()<=0) {
+			jump2();
+		}
+		if(isset($_POST['send']) && $_POST['send']==1) {
+			$own->setProfile($_POST);
+		}
+		$P = $own->getProfile();
+		$tplContent->setVariable($P);
+		$html = $tplContent->get('tpl.profile.php');
+		
+		break;
 	default:
 		$public = $own->getPublics(0,50);
 		$tplContent->setVariable("public", $public);

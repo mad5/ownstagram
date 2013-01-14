@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.7.3";
+	public $VERSION = "1.7.4";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -74,6 +74,20 @@ class ownStaGram {
 			touch(projectPath.'/data/cache/index.html');
 		}
 		
+	}
+	
+	public function getProfile() {
+		$Q = "SELECT * FROM ost_user WHERE u_pk='".me()."' ";
+		$P = $this->DC->getByQuery($Q);
+		return $P;
+	}
+	public function setProfile($post) {
+		$U = array(
+				"u_nickname" => htmlspecialchars($post['u_nickname']),
+				"u_country" => htmlspecialchars($post['u_country']),
+				"u_city" => htmlspecialchars($post['u_city']),
+			);
+		$this->DC->update($U, "ost_user", me(), "u_pk");
 	}
 	
 	public function getSettings() {

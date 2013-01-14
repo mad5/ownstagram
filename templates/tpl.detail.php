@@ -1,17 +1,27 @@
         <div class="span3">
+        
         	<?php if($VARS->get('i_u_fk')==me()) { ?>
-                  <div class="well sidebar-nav" id='links'>
-                  
-                  <a href='index.php?action=overview' onclick="if($('#detailiframe', window.parent.document).length>0) { parent.history.pushState({ }, 'Overview', 'index.php?action=overview'); $('#detailiframe', window.parent.document).remove(); return false;}" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
-                 	 
-                  	
-                  </div>
+			  <div class="well sidebar-nav" id='links'>
+			  <a href='index.php?action=overview' onclick="if($('#detailiframe', window.parent.document).length>0) { parent.history.pushState({ }, 'Overview', 'index.php?action=overview'); $('#detailiframe', window.parent.document).remove(); return false;}" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
+			  </div>
                 <?php } ?>
+                
                   <div class="well sidebar-nav" id='links'>
                   
                   	<a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('hide=1&', '');H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a> 
                   	
                   </div>
+                
+                  <?php if($VARS->get('i_u_fk')!=me() && 1==2) { ?>
+                  	  
+                  	 
+                  <div class="well sidebar-nav" id='links'>
+                  	<a href='#' id='connectlink' class="btn btn-link"><i class="icon-tag"></i> Follow user</a> 
+                  </div>
+                  	  
+                  	  
+                  <?php } ?>
+		
                   
                   <?php if($VARS->get('i_u_fk')==me()) { ?>
 			  <div class="well sidebar-nav">

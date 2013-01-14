@@ -9,7 +9,17 @@ function openIframe(id) {
 	
 	history.pushState({ }, "Details", "index.php?action=detail&id="+id);
 	
-	//console.log(html);
+	window.onpopstate = function(event) {
+		var L = window.location+"";
+		if(L.indexOf('action=overview')!=-1) {
+			if($('#detailiframe').length>0) {
+				$('#detailiframe').remove(); 
+				return false;
+			}			
+		}
+	}
+
+	
 	$('body').append(html);
 }
 </script>
@@ -50,7 +60,7 @@ function openIframe(id) {
           </div><!--/row-->
         </div><!--/span-->
         
-        <div class="span3">
+        <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">sorting</li>

@@ -21,6 +21,12 @@ $UPDATE_SQL[5] = array('type' => 'newfield', 'table' => 'ost_images', 'field' =>
 $UPDATE_SQL[6] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lng', 'query' => 'ALTER TABLE `ost_images` ADD `i_lng` double NOT NULL ');
 $UPDATE_SQL[7] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_location', 'query' => 'ALTER TABLE `ost_images` ADD `i_location` varchar(255) NOT NULL ');
 
+$UPDATE_SQL[8] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_nickname', 'query' => 'ALTER TABLE `ost_user` ADD `u_nickname` varchar(255) NOT NULL ');
+$UPDATE_SQL[9] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_country', 'query' => 'ALTER TABLE `ost_user` ADD `u_country` varchar(255) NOT NULL ');
+$UPDATE_SQL[10] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_city', 'query' => 'ALTER TABLE `ost_user` ADD `u_city` varchar(255) NOT NULL ');
+
+$UPDATE_SQL[11] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE ost_follow ( `f_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `f_me_u_fk` BIGINT NOT NULL , `f_follow_u_fk` INT NOT NULL , `f_date` DATETIME NOT NULL , `f_confirmed` DATETIME NOT NULL ) ENGINE = InnoDB ');
+
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');
 
