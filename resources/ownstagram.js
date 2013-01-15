@@ -38,6 +38,7 @@ var ownStaGram = {
 	
 	"startRegister": function(form) {
 		
+		if($(form).find('#register_nickname').val()=='') return this.error('no nickname given!');
 		if($(form).find('#register_email').val()=='') return this.error('no email given!');
 		if($(form).find('#register_password').val()=='') return this.error('no password given!');
 		if($(form).find('#register_password').val()!=$(form).find('#register_again').val()) return this.error('password mismatch!');
@@ -47,6 +48,7 @@ var ownStaGram = {
 				"type": "POST",
 				"data": {
 					'action': 'register',
+					'nickname': $(form).find('#register_nickname').val(), 
 					'email': $(form).find('#register_email').val(), 
 					'password': MD5(this.md5salt+$(form).find('#register_password').val())
 					},
@@ -62,6 +64,27 @@ var ownStaGram = {
 				}
 		});
 		
+	},
+	
+	"startForgot": function(form) {
+		if($('#forgot_email').val()=='') return this.error('no email given!');
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": {
+					'action': 'forgot',
+					'email': $('#forgot_email').val() 
+					},
+				"dataType": "json",
+				"success": function(data) {
+					if(data.result==1) {
+						alert('We sent you a new password!');
+						window.location = 'index.php?action=login';
+					} else {
+						alert('This email-address is unknown!');
+					}
+				}
+		});
 	},
 	
 	"startLogin": function(form) {
@@ -154,6 +177,31 @@ var ownStaGram = {
 		return false;
 	}
 };
+
+
+function openIframe(id) {
+	var h1 = $('.navbar').height();
+	var h2 = $(window).height();
+	var html = '<div id="detailiframe" style="position:absolute;top:'+($(window).scrollTop())+'px;left:0;width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;">';
+	html += '<iframe src="index.php?hide=1&action=detail&id='+id+'" style="width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;" border=0 frameborder=0>';
+	html += '</iframe></div>';
+	
+	history.pushState({ }, "Details", "index.php?action=detail&id="+id);
+	
+	window.onpopstate = function(event) {
+		var L = window.location+"";
+		if(L.indexOf('action=overview')!=-1) {
+			if($('#detailiframe').length>0) {
+				$('#detailiframe').remove(); 
+				return false;
+			}			
+		}
+	}
+
+	
+	$('body').append(html);
+}
+
 
 // {{{	MD5
 /*

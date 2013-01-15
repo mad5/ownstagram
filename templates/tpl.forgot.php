@@ -27,20 +27,11 @@
         padding: 7px 9px;
       }
 </style>
-<form class="form-signin" onsubmit="ownStaGram.startLogin(this);return false;">
-	<h2 class="form-signin-heading">Please sign in</h2>
-	<input type="text" class="input-block-level" placeholder="Email address" id="login_email">
-	<input type="password" class="input-block-level" placeholder="Password" id="login_password">
-	<!--
-	<label class="checkbox">
-	  <input type="checkbox" value="remember-me" id="login_remember" checked> Remember me
-	</label>
-	-->
-	<button class="btn btn-large btn-primary" type="submit">Sign in</button>
+<form class="form-signin" onsubmit="ownStaGram.startForgot(this);return false;">
+	<h2 class="form-signin-heading">Please enter your email-address</h2>
+	<input type="text" class="input-block-level" placeholder="Email address" id="forgot_email">
+	<button class="btn btn-large btn-primary" type="submit">Send me a new password</button>
 	
-	<br/><br/>
-	Sorry, but I forgot my password...<br/>
-	No problem! <a href='index.php?action=forgot'>Click here...</a>
 	
 </form>
 <br/>

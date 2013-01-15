@@ -125,15 +125,16 @@ class ownStaGram {
 		exit;
 	}
 	
-	public function register($email, $pass) {
+	public function register($nickname, $email, $pass) {
 
-		$C = $this->DC->countByQuery("SELECT count(*) FROM ost_user WHERE lcase(u_email)='".strtolower(addslashes($email))."' ");
+		$C = $this->DC->countByQuery("SELECT count(*) FROM ost_user WHERE lcase(u_email)='".strtolower(addslashes($email))."' OR lcase(u_nickname)='".strtolower(addslashes($nickname))."' ");
 		if($C>0) {
 			$res = array("result" => 0);
 			return $res;
 		}
 		
 		$data = array('u_email' => $email,
+				'u_nickname' => htmlspecialchars($nickname),
 				'u_password' => $pass,
 				'u_registered' => now()
 				);
@@ -156,6 +157,26 @@ class ownStaGram {
 		}
 		
 		
+		return $res;
+	}
+	public function forgot($email) {
+		$user = $this->DC->getByQuery("SELECT * FROM ost_user WHERE u_email='".addslashes($email)."' AND u_confirmed!='0000-00-00 00:00:00' ");
+		if($user!="") {
+			$res = array("result" => 1);
+
+			$P = substr(md5(uniqid(microtime(true)).rand()),0,5);
+			$PW = array("u_password" => md5('a4916ab01df010a042c612eb057b4ac23e79530d555354c4a92e1b24301b964f0f7ecd66143c4093ea1470efcfa33042'.$P));
+			$this->DC->update($PW, "ost_user", $user["u_pk"], "u_pk");
+			
+			$M = "You are a member at ".$_SERVER['HTTP_HOST']." with an ownStaGram-account.\n";
+			$M .= "This is your new password: ".$P;
+			
+			mail($user["u_email"], "ownStaGram - New password", $M, "FROM:".ownStaGramAdmin);
+			
+			
+		} else {
+			$res = array("result" => 0);
+		}
 		return $res;
 	}
 	public function login($email, $pass) {

@@ -120,6 +120,9 @@ switch($_GET['action']) {
 	case 'login':
 		$html = $tplContent->get('tpl.login.php');
 		break;
+	case 'forgot':
+		$html = $tplContent->get('tpl.forgot.php');
+		break;
 	
 	case 'overview':
 		if(me()<=0) jump2();

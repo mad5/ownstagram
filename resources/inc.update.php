@@ -26,6 +26,7 @@ $UPDATE_SQL[9] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => '
 $UPDATE_SQL[10] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_city', 'query' => 'ALTER TABLE `ost_user` ADD `u_city` varchar(255) NOT NULL ');
 
 $UPDATE_SQL[11] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE ost_follow ( `f_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `f_me_u_fk` BIGINT NOT NULL , `f_follow_u_fk` INT NOT NULL , `f_date` DATETIME NOT NULL , `f_confirmed` DATETIME NOT NULL ) ENGINE = InnoDB ');
+$UPDATE_SQL[12] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_star', 'query' => 'ALTER TABLE `ost_images` ADD `i_star` tinyint NOT NULL ');
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

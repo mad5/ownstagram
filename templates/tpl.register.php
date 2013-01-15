@@ -30,6 +30,7 @@
 <form class="form-signin" onsubmit="ownStaGram.startRegister(this);return false;">
 
 	<h2 class="form-signin-heading">Please register</h2>
+	<input type="text" class="input-block-level" placeholder="Nickname" id="register_nickname">
 	<input type="text" class="input-block-level" placeholder="Email address" id="register_email">
 	<input type="password" class="input-block-level" placeholder="Password" id="register_password">
 	<input type="password" class="input-block-level" placeholder="Again" id="register_again">

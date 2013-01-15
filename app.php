@@ -14,7 +14,10 @@ switch($_REQUEST['action']) {
 			$res = $own->addComment($_REQUEST['id'], $_REQUEST['comment']);
 			break; 	
 	case 'register' :
-			$res = $own->register($_REQUEST['email'], $_REQUEST['password']);
+			$res = $own->register($_REQUEST['nickname'], $_REQUEST['email'], $_REQUEST['password']);
+			break; 	
+	case 'forgot' :
+			$res = $own->forgot($_REQUEST['email']);
 			break; 	
 	case 'login' :
 			$res = $own->login($_REQUEST['email'], $_REQUEST['password']);
