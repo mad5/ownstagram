@@ -358,6 +358,19 @@ class ownStaGram {
 		}
 		return $data;
 	}
+	
+	public function listgallery($email, $pass) {
+		 $u = $this->login($email, $pass);
+		 if($u["result"]==1) {
+		 	 $L = $this->getList((int)$this->user['u_pk']);
+		 	 for($i=0;$i<count($L);$i++) {
+		 	 	 $L[$i]["imgid"] = md5($L[$i]['i_date'].$L[$i]['i_file']);
+		 	 }
+		 	 return array("result" => 1, "list" => $L);
+		 }
+		 return $u;
+	}
+	
 	public function getNextImages($data) {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date>'".$data["i_date"]."' ORDER BY i_date LIMIT 3";
 		$D = $this->DC->getAllByQuery($Q);

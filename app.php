@@ -28,6 +28,9 @@ switch($_REQUEST['action']) {
 	case 'upload' :
 			$res = $own->uploadapp();
 			break; 	
+	case 'listgallery' :
+			$res = $own->listgallery($_REQUEST['email'], $_REQUEST['password']);
+			break; 	
 	case 'setting' :
 			$res = $own->savesetting();
 			break; 	
