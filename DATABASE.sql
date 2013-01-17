@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS ost_groups (
 CREATE TABLE IF NOT EXISTS ost_images (
   i_pk bigint(20) NOT NULL AUTO_INCREMENT,
   i_u_fk bigint(20) NOT NULL,
-  i_key vharchar(50) NOT NULL,
+  i_key varchar(50) NOT NULL,
   i_date datetime NOT NULL,
   i_file varchar(255) NOT NULL,
   i_public tinyint(4) NOT NULL,
