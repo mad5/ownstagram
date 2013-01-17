@@ -27,6 +27,7 @@ $UPDATE_SQL[10] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 
 
 $UPDATE_SQL[11] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE ost_follow ( `f_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `f_me_u_fk` BIGINT NOT NULL , `f_follow_u_fk` INT NOT NULL , `f_date` DATETIME NOT NULL , `f_confirmed` DATETIME NOT NULL ) ENGINE = InnoDB ');
 $UPDATE_SQL[12] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_star', 'query' => 'ALTER TABLE `ost_images` ADD `i_star` tinyint NOT NULL ');
+$UPDATE_SQL[13] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_key', 'query' => array("ALTER TABLE `ost_images` ADD `i_key` varchar(50) NOT NULL", "UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' "));
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

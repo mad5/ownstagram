@@ -1,14 +1,10 @@
 
         <div class="span9">
           <div class="hero-unit">
-          
-          	<h1><?php echo ($VARS->get('s_title')=='' ? 'My ownStaGram!' : $VARS->get('s_title')); ?> </h1>
-            <h3>
-            the self-hosted photosharing-platform.
-            </h3>
-            
-            
+		<h1><?php echo ($VARS->get('s_title')=='' ? 'My ownStaGram!' : $VARS->get('s_title')); ?> </h1>
+		<h3><?php echo ($VARS->get('s_subtitle')=='' ? 'the self-hosted photosharing-platform.' : $VARS->get('s_subtitle')); ?> </h3>
           </div>
+          
           <div class="row-fluid">
             <div class="span4">
               <h2>Photo-Sharing</h2>
@@ -62,6 +58,58 @@
               
             </div><!--/span-->
           </div><!--/row-->
+          
+          <br/><br/>
+          
+          <div class="row-fluid">
+            <div class="span4">
+            	<h2>Recognized by others</h2>
+            	<p>
+            	   <b>Instagram Alternative That Lets You Own Your Photos 100%</b><br/>
+            	    If you want to share photos that you truly own, you can host your own Instagram-like platform with Ownstagram. This photo sharing software lets you upload your pictures from the website or its own dedicated Android app, while having full ownership of your photos.
+            	    <br/>
+            	    <a href="http://www.makeuseof.com/dir/ownstagram-instagram-alternative-that-lets-you-own-your-photos-100/" target="_blank">read full review at makeuseof.com</a>
+            	</p>
+            	<p>
+            	<a href="http://www.makeuseof.com/dir/ownstagram-instagram-alternative-that-lets-you-own-your-photos-100/" target="_blank" title="Cool Websites, Software and Internet Tips"><img src="http://www.makeuseof.com/images/logo/recby_new.png"></a>
+            	</p>
+            
+            </div><!--/span-->
+            
+            <div class="span4">
+            	<h2>&nbsp;</h2>
+            	<p>
+            	   <b>Ownstagram - In a nutshell</b><br/>
+            	   <br/>
+            	    Ownstagram works much like infamous Instagram, allowing you to quickly shoot a picture, upload it and share it with your friends. It’s still a little rough around the edges but looks very promising.
+            	    <br/>
+            	    <a href="http://selfhostedweb.org/ownstagram/" target="_blank">read full review at selfhostedweb.org</a>
+            	    
+            	</p>
+            
+            </div><!--/span-->
+            
+            
+            
+            <div class="span4">
+            	<h2>&nbsp;</h2>
+            	<p>
+            	   <b>você é dono de 100% das suas fotos</b><br/>
+            	   <br/>
+            	    'Ownstagram': uma opção ao Instagram onde 'você é dono de 100% das suas fotos'<br/>
+            	    Este sistema de compartilhamento de fotos permite que os usuários enviem suas imagens a partir do site ou do próprio app para Android, e o principal:  você terá plena propriedade sobre suas fotos.
+            	    <br/>
+            	    <a href="http://canaltech.com.br/noticia/apps/Ownstagram-uma-opcao-ao-Instagram-onde-voce-e-dono-de-100-das-suas-fotos/" target="_blank">read full review at canaltech.com.br</a>
+            	    
+            	</p>
+            
+            </div><!--/span-->
+            
+            
+            
+          </div><!--/row-->
+           
+          
         </div><!--/span-->
         
         <div class="span3">

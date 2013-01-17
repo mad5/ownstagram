@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.7.4";
+	public $VERSION = "1.8.0";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -228,6 +228,7 @@ class ownStaGram {
 				'i_file' => $fn
 			);
 			$pk = $this->DC->insert($data, 'ost_images');
+			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
 			
 			$G = $this->getGroupList();
 			$G2 = array();
@@ -277,6 +278,7 @@ class ownStaGram {
 				'i_public' => (int)$_POST['public']
 			);
 		$pk = $this->DC->insert($data, 'ost_images');
+		$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
 		
 		$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
 		return $res;
