@@ -87,6 +87,28 @@ var ownStaGram = {
 		});
 	},
 	
+	"startRemoteLogin": function(server) {
+		
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": {
+					"action": "remotelogin",
+					"server": server
+				},
+				"dataType": "json",
+				"success": function(data) {
+					if(data.result==1) {
+						if(server.substring(server.length-1)!="/") server += "/";
+						//alert(server+"index.php?action=login&remotekey="+data.key+"&remoteserver="+escape(data.server));
+						//console.log(data);
+						window.location = server+"index.php?action=login&remotekey="+data.key+"&remoteserver="+escape(data.server);
+					}
+				}
+		});
+		
+	},
+	
 	"startLogin": function(form) {
 		if($('#login_email').val()=='') return this.error('no email given!');
 		if($('#login_password').val()=='') return this.error('no password given!');
@@ -109,11 +131,18 @@ var ownStaGram = {
 				"data": {
 					'action': 'login',
 					'email': $('#login_email').val(), 
-					'password': MD5(this.md5salt+$('#login_password').val())
+					'password': MD5(this.md5salt+$('#login_password').val()),
+					
+					"remotekey": $('#login_remotekey').val(),
+					"remoteserver": $('#login_remoteserver').val()
+					
 					},
 				"dataType": "json",
 				"success": function(data) {
-					if(data.result==1) {
+					//console.log(data);return;
+					if(data.result==2) {
+						window.location = $('#login_remoteserver').val()+"?action=rlogin&key="+data.key;
+					} else if(data.result==1) {
 						if(ownStaGram.type=="app") {
 							//$('#screen2').fadeIn();
 							$('#screen_settings').fadeOut( function() {

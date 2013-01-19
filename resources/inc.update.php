@@ -29,6 +29,9 @@ $UPDATE_SQL[11] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' =
 $UPDATE_SQL[12] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_star', 'query' => 'ALTER TABLE `ost_images` ADD `i_star` tinyint NOT NULL ');
 $UPDATE_SQL[13] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_key', 'query' => array("ALTER TABLE `ost_images` ADD `i_key` varchar(50) NOT NULL", "UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' "));
 
+$UPDATE_SQL[14] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_remoteserver', 'query' => 'ALTER TABLE `ost_user` ADD `u_remoteserver` varchar(255) NOT NULL ');
+$UPDATE_SQL[15] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_instance', 'query' => array('ALTER TABLE `ost_settings` ADD `s_instance` varchar(255) NOT NULL ', "UPDATE ost_settings SET s_instance=md5('".$_SERVER['HTTP_HOST'].microtime(true)."')"));
+
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');
 

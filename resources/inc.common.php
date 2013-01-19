@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.8.0";
+	public $VERSION = "1.9.0";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -93,7 +93,13 @@ class ownStaGram {
 	public function getSettings() {
 		$Q = "SELECT * FROM ost_settings";
 		$S = $this->DC->getByQuery($Q);
-		if($S=="") $S['s_allowregistration']=1;
+		if($S=="") {
+			$S = array('s_allowregistration'=>1,
+					"s_instance" => md5(microtime(true))
+					);
+			$this->DC->insert($S, "ost_settings");
+			
+		}
 		return $S;
 	}
 	
@@ -179,9 +185,58 @@ class ownStaGram {
 		}
 		return $res;
 	}
+	public function getServerUrl() {
+		$S = "http".(isset($_SERVER["HTTPS"])?'s':'')."://".$_SERVER["HTTP_HOST"].dirname($_SERVER["PHP_SELF"]);
+		return $S;
+	}
+	
+	public function loginAtRemote($remotekey, $remoteserver) {
+		$S = $this->getSettings();
+		$data = array("id" => md5($this->user['u_pk'].$this->user['u_registered'].$S['s_instance']),
+				"email" => $this->user['u_email'],
+				"nickname" => $this->user['u_nickname'],
+				"country" => $this->user['u_country'],
+				"city" => $this->user['u_city'],
+				"server" => $this->getServerUrl(),
+				"key" => $remotekey
+				);
+		$res = json_decode(file_get_contents($remoteserver.'/app.php?action=loginfromremote&data='.urlencode(json_encode($data))), true);
+		
+		//$res = array("result" => 2);
+		return $res;
+	}
+	
+	public function rlogin($key) {
+		if(stristr($key,'.') || stristr($key,'/') ) die("error.");
+		if(file_exists(projectPath.'/data/cache/'.$key.'.rlogin')) {
+			$data = json_decode(file_get_contents(projectPath.'/data/cache/'.$key.'.rlogin'), true);
+			
+			$res = $this->login($data['email'], $data['id']);
+			#vd($res);exit;
+			if($res['result']==1) {
+				jump2('overview');
+			} else {
+				$reg = array(
+					'u_email' => $data['email'],
+					'u_password' => $data['id'],
+					'u_registered' => now(),
+					'u_confirmed' => now(),
+					'u_nickname' => $data['nickname'],
+					'u_remoteserver' => $data['server'],
+					'u_country' => $data['country'],
+					'u_city' => $data['city']
+					);
+				$reg['u_pk'] = $this->DC->insert($reg, 'ost_user');
+				$res = $this->login($data['email'], $data['id']);
+				jump2('overview');
+			}
+		}
+	}
+	
 	public function login($email, $pass) {
 		$this->user = $user = $this->DC->getByQuery("SELECT * FROM ost_user WHERE u_email='".addslashes($email)."' AND u_password='".addslashes($pass)."' AND u_confirmed!='0000-00-00 00:00:00' ");
 		if($user!="") {
+			if($user['u_remoteserver']!='') $user['u_email'] .= ' @ '.$user['u_remoteserver'];
 			setS("user", $user); 
 			$res = array("result" => 1);
 			setCookie('ownStaGram', md5('sdkfb2irzsidfz8edtfwuedfgwjehfwje'.$this->user['u_pk']), time()+60*60*24*365);

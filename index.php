@@ -116,7 +116,9 @@ switch($_GET['action']) {
 	case 'register':
 		$html = $tplContent->get('tpl.register.php');
 		break;
-	
+	case 'rlogin':
+		$own->rlogin($_GET['key']);
+		break;
 	case 'login':
 		$html = $tplContent->get('tpl.login.php');
 		break;
