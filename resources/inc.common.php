@@ -207,29 +207,36 @@ class ownStaGram {
 	}
 	
 	public function rlogin($key) {
-		if(stristr($key,'.') || stristr($key,'/') ) die("error.");
-		if(file_exists(projectPath.'/data/cache/'.$key.'.rlogin')) {
-			$data = json_decode(file_get_contents(projectPath.'/data/cache/'.$key.'.rlogin'), true);
-			
-			$res = $this->login($data['email'], $data['id']);
-			#vd($res);exit;
-			if($res['result']==1) {
-				jump2('overview');
-			} else {
-				$reg = array(
-					'u_email' => $data['email'],
-					'u_password' => $data['id'],
-					'u_registered' => now(),
-					'u_confirmed' => now(),
-					'u_nickname' => $data['nickname'],
-					'u_remoteserver' => $data['server'],
-					'u_country' => $data['country'],
-					'u_city' => $data['city']
-					);
-				$reg['u_pk'] = $this->DC->insert($reg, 'ost_user');
+		
+		$S = $this->getSettings();
+		if( isset($S['s_allowregistration']) && $S['s_allowregistration']==1 ) { 
+		
+			if(stristr($key,'.') || stristr($key,'/') ) die("error.");
+			if(file_exists(projectPath.'/data/cache/'.$key.'.rlogin')) {
+				$data = json_decode(file_get_contents(projectPath.'/data/cache/'.$key.'.rlogin'), true);
+				
 				$res = $this->login($data['email'], $data['id']);
-				jump2('overview');
+				#vd($res);exit;
+				if($res['result']==1) {
+					jump2('overview');
+				} else {
+					$reg = array(
+						'u_email' => $data['email'],
+						'u_password' => $data['id'],
+						'u_registered' => now(),
+						'u_confirmed' => now(),
+						'u_nickname' => $data['nickname'],
+						'u_remoteserver' => $data['server'],
+						'u_country' => $data['country'],
+						'u_city' => $data['city']
+						);
+					$reg['u_pk'] = $this->DC->insert($reg, 'ost_user');
+					$res = $this->login($data['email'], $data['id']);
+					jump2('overview');
+				}
 			}
+		} else {
+			jump2('login');
 		}
 	}
 	

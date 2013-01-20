@@ -55,6 +55,7 @@
 </form>
 <br/>
 
+<?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
 <?php if(!isset($_GET["remotekey"]) && 1==1) { ?>
 
 <script>
@@ -117,6 +118,7 @@ function checkServer() {
 	
 </form>
 <br/>
+<?php } ?>
 <?php } ?>
 
 

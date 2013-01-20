@@ -47,25 +47,29 @@
             <?php } ?>
             </p>
             <ul class="nav">
-              <li class="active"><a href="index.php">Home</a></li>
+              <li <?php if(!isset($_GET['action']) || $_GET['action']=='') echo 'class="active"';?>><a href="index.php">Home</a></li>
               <?php if(me()>0) { ?>
-              	<li><a href="index.php?action=overview">Overview</a></li>
+              	<li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">Overview</a></li>
               	
               	<?php if( getS('user', 'u_email')==ownStaGramAdmin || ($VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 ) ) { ?>
-              	<li><a href="index.php?action=upload">Upload</a></li>
+              		<?php if( getS('user', 'u_remoteserver')=='') { ?>
+              			<li <?php if(isset($_GET['action']) && $_GET['action']=='upload') echo 'class="active"';?>><a href="index.php?action=upload">Upload</a></li>
+              		<?php } ?>
               	<?php } ?>
               	
               	<?php if(getS('user', 'u_email')==ownStaGramAdmin) { ?>
-              		<li><a href="index.php?action=settings">Settings</a></li>
-              		<li><a href="index.php?action=users">Users</a></li>
+              		<li <?php if(isset($_GET['action']) && $_GET['action']=='settings') echo 'class="active"';?>><a href="index.php?action=settings">Settings</a></li>
+              		<li <?php if(isset($_GET['action']) && $_GET['action']=='users') echo 'class="active"';?>><a href="index.php?action=users">Users</a></li>
               	<?php } ?>
-              	<li><a href="index.php?action=groups">Groups</a></li>
-              	<li><a href="index.php?action=profile">Profile</a></li>
+       		<?php if( getS('user', 'u_remoteserver')=='') { ?>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='groups') echo 'class="active"';?>><a href="index.php?action=groups">Groups</a></li>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='profile') echo 'class="active"';?>><a href="index.php?action=profile">Profile</a></li>
+              	<?php } ?>
               <?php } else { ?>
-              	 <li><a href="index.php?action=login">Login</a></li>
+              	 <li <?php if(isset($_GET['action']) && $_GET['action']=='login') echo 'class="active"';?>><a href="index.php?action=login">Login</a></li>
               	 
               	 <?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
-              	 	 <li><a href="index.php?action=register">Register</a></li>
+              	 	 <li <?php if(isset($_GET['action']) && $_GET['action']=='register') echo 'class="active"';?>><a href="index.php?action=register">Register</a></li>
               	 <?php } ?>
               <?php } ?>
               

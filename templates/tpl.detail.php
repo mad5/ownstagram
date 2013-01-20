@@ -106,7 +106,7 @@
           <?php } ?>
           
           <!-- <img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=500' width=500 height=500 /> -->
-          <img src='<?php echo $VARS->get('imgsrc');?>' width=500 height=500 />
+          <img src='<?php echo $VARS->get('imgsrc');?>' width=500 height=500 style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:5px;" />
           
           </div>
         </div><!--/span-->
