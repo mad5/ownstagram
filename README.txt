@@ -1,6 +1,12 @@
+
+INSTALLATION
+------------------------------------------------------------
+
+Installation is very easy if you follow this few steps:
+
 1) create a new mysql-database
 2) import the SQL-File "DATABASE.sql"
-3) rename inc.var.php.dist to inc.var.php
+3) rename inc.var.php.dist into inc.var.php
 4) insert your database-credentials into inc.var.php
 5) make data-folder writable for PHP
 6) set "ownStaGramAdmin" in inc.var.php correctly with the email-address you want to use as ownStaGram-administrator

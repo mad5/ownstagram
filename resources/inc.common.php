@@ -202,6 +202,15 @@ class ownStaGram {
 				);
 		$res = json_decode(file_get_contents($remoteserver.'/app.php?action=loginfromremote&data='.urlencode(json_encode($data))), true);
 		
+		if($res['result']==2) {
+			$R = $this->DC->getByQuery("SELECT * FROM ost_remotes WHERE r_u_fk='".$this->user['u_pk']."' AND r_server='".addslashes($remoteserver)."' ");
+			if($R=="") {
+				$R = array("r_u_fk" => $this->user['u_pk'],
+					   "r_server" => $remoteserver);
+				$this->DC->insert($R, "ost_remotes");
+			}
+		}
+			
 		//$res = array("result" => 2);
 		return $res;
 	}

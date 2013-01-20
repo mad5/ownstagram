@@ -16,21 +16,19 @@ $UPDATE_SQL[1] = array('type' => 'newtable', 'table' => 'ost_views', 'query' => 
 $UPDATE_SQL[2] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_title', 'query' => 'ALTER TABLE `ost_settings` ADD `s_title` VARCHAR(50) NOT NULL ');
 $UPDATE_SQL[3] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE IF NOT EXISTS ost_groups ( `g_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `g_name` VARCHAR( 50 ) NOT NULL , `g_u_fk` BIGINT NOT NULL ) ENGINE = InnoDB');
 $UPDATE_SQL[4] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_g_fk', 'query' => 'ALTER TABLE `ost_images` ADD `i_g_fk` bigint(20) NOT NULL ');
-
 $UPDATE_SQL[5] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lat', 'query' => 'ALTER TABLE `ost_images` ADD `i_lat` double NOT NULL ');
 $UPDATE_SQL[6] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_lng', 'query' => 'ALTER TABLE `ost_images` ADD `i_lng` double NOT NULL ');
 $UPDATE_SQL[7] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_location', 'query' => 'ALTER TABLE `ost_images` ADD `i_location` varchar(255) NOT NULL ');
-
 $UPDATE_SQL[8] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_nickname', 'query' => 'ALTER TABLE `ost_user` ADD `u_nickname` varchar(255) NOT NULL ');
 $UPDATE_SQL[9] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_country', 'query' => 'ALTER TABLE `ost_user` ADD `u_country` varchar(255) NOT NULL ');
 $UPDATE_SQL[10] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_city', 'query' => 'ALTER TABLE `ost_user` ADD `u_city` varchar(255) NOT NULL ');
-
 $UPDATE_SQL[11] = array('type' => 'newtable', 'table' => 'ost_groups', 'query' => 'CREATE TABLE ost_follow ( `f_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `f_me_u_fk` BIGINT NOT NULL , `f_follow_u_fk` INT NOT NULL , `f_date` DATETIME NOT NULL , `f_confirmed` DATETIME NOT NULL ) ENGINE = InnoDB ');
 $UPDATE_SQL[12] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_star', 'query' => 'ALTER TABLE `ost_images` ADD `i_star` tinyint NOT NULL ');
 $UPDATE_SQL[13] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_key', 'query' => array("ALTER TABLE `ost_images` ADD `i_key` varchar(50) NOT NULL", "UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' "));
-
 $UPDATE_SQL[14] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 'u_remoteserver', 'query' => 'ALTER TABLE `ost_user` ADD `u_remoteserver` varchar(255) NOT NULL ');
 $UPDATE_SQL[15] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_instance', 'query' => array('ALTER TABLE `ost_settings` ADD `s_instance` varchar(255) NOT NULL ', "UPDATE ost_settings SET s_instance=md5('".$_SERVER['HTTP_HOST'].microtime(true)."')"));
+
+$UPDATE_SQL[16] = array('type' => 'newtable', 'table' => 'ost_remotes', 'query' => 'CREATE TABLE ost_remotes (`r_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `r_u_fk` BIGINT NOT NULL , `r_server` VARCHAR(255) NOT NULL ) ENGINE = InnoDB');
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

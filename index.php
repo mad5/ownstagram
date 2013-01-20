@@ -123,8 +123,10 @@ switch($_GET['action']) {
 		if(me()>0 && isset($_REQUEST['remotekey']) && $_REQUEST['remotekey']!='') {
 			$own->user = getS("user");
 			$res = $own->loginAtRemote($_REQUEST['remotekey'], $_REQUEST['remoteserver']);
-			header("location: ".$_REQUEST['remoteserver']."?action=rlogin&key=".$res['key']);
-			exit;
+			if($res['result']==2) {
+				header("location: ".$_REQUEST['remoteserver']."?action=rlogin&key=".$res['key']);
+				exit;
+			}
 		}
 
 		$html = $tplContent->get('tpl.login.php');
