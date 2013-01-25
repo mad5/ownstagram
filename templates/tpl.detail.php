@@ -73,42 +73,81 @@
 
         <div class="span6">
         <div class="hero-unit" style="padding-top:15px;">
+		  
+		  <div style="float:left;">
+			<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
+		  </div>
+		  
+		  <?php if(me()==$VARS->get('i_u_fk')) { ?>
+		  <div style="float:right;">
+			
+			<?php foreach($VARS->get('next') as $key => $img) { ?>
+				<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
+				<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
+				</a>
+			<?php } ?>
+		  
+			<a href='index.php?action=detail&id=<?php echo $VARS->get("id");?>'>
+				<img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=50' width=50 height=50 />
+			</a>
+	
+			<?php foreach($VARS->get('prev') as $key => $img) { ?>
+				<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
+				<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
+				</a>
+			<?php } ?>
+			
+		  </div>
+		  <?php } ?>
+		  
+		  <div style="clear:both;"></div>
+		  
+		  <?php /* <img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=500' width=500 height=500 /> */ ?>
+		  
+		  <div style='max-width:540px;background-color:white;border-radius: 5px;box-shadow:0 10px 18px -10px #888888;'>
+			  <div style='padding:20px;'>
+			  <img src='<?php echo $VARS->get('imgsrc');?>' width=500 height=500 style="border:solid 1px silver;border-radius:5px;" />
+			  </div>
+			  <div style='height:30px;padding:0 20px 20px 20px;'>
+				  <?php if($VARS->get('i_title')!="") { ?>
+					  <b><?php echo $VARS->get('i_title');?></b><br/>
+				  <?php } ?>
+			  </div>
+		  </div>
           
-          <div style="float:left;">
-          	<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
           </div>
           
-          <?php if(me()==$VARS->get('i_u_fk')) { ?>
-          <div style="float:right;">
+          <div class="hero-unit" style="padding-top:15px;">
           	
-          	<?php foreach($VARS->get('next') as $key => $img) { ?>
-          		<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
-          		<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
-          		</a>
-          	<?php } ?>
-          
-          	<a href='index.php?action=detail&id=<?php echo $VARS->get("id");?>'>
-          		<img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=50' width=50 height=50 />
-          	</a>
-
-          	<?php foreach($VARS->get('prev') as $key => $img) { ?>
-          		<a href='index.php?action=detail&id=<?php echo $img->get("id");?>'>
-          		<img src='index.php?action=image&amp;img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&amp;w=35' width=35 height=35 />
-          		</a>
-          	<?php } ?>
+          	<h2>Comments</h2>
           	
+          	<?php foreach($VARS->get('comments') as $key => $comment) { ?>
+              	      <p class="muted">
+              	      <?php if($VARS->get('i_u_fk')==$comment->get('co_u_fk')) { ?>
+              	      	<i title="comment from owner" class="icon-certificate"></i> 
+              	      <?php } else { ?>
+              	      	     <i title="comment from other" class="icon-align-justify"></i>
+              	      <?php }?>
+              	      	<?php echo $comment->get("co_comment"); ?>
+              	      	<br/><span class='date'><small><?php echo date("d.m.Y H:i:s", strtotime($comment->get("co_date"))); ?></small></span>
+              	      </p>
+              <?php } ?>
+             
+              <br/>
+              <?php if(me()>0) { ?>
+		      
+		      <form class="form-inline" onsubmit="ownStaGram.startComment(this, '<?php echo $VARS->get('id');?>');return false;">
+			    <label>add comment</label><br/>
+			    <input type="text" class="input-medium" placeholder="Type something..." id="comment_text">
+			    <button type="submit" class="btn">Submit</button>
+			</form>
+	      <?php } else { ?>
+	      	      <?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
+	      	      <p class="muted">Login to comment.</p>
+	      	      <?php } ?>
+	      <?php } ?>
           </div>
-          <?php } ?>
           
-          <div style="clear:both;"></div>
-          <?php if($VARS->get('i_title')!="") { ?>
-          	  <b><?php echo $VARS->get('i_title');?></b><br/>
-          <?php } ?>
-          
-          <!-- <img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=500' width=500 height=500 /> -->
-          <img src='<?php echo $VARS->get('imgsrc');?>' width=500 height=500 style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:5px;" />
-          
-          </div>
         </div><!--/span-->
         
         <div class="span3">
@@ -124,39 +163,13 @@
          </div>
         <?php } ?>
          
+        <?php /*
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">Comments</li>
-              
-              <?php foreach($VARS->get('comments') as $key => $comment) { ?>
-              	      <p class="muted">
-              	      <?php if($VARS->get('i_u_fk')==$comment->get('co_u_fk')) { ?>
-              	      	<i title="comment from owner" class="icon-certificate"></i> 
-              	      <?php } else { ?>
-              	      	     <i title="comment from other" class="icon-align-justify"></i>
-              	      <?php }?>
-              	      	<?php echo $comment->get("co_comment"); ?>
-              	      	<br/><span class='date'><small><?php echo date("d.m.Y H:i:s", strtotime($comment->get("co_date"))); ?></small></span>
-              	      </p>
-              <?php } ?>
-             
-              <br/><br/>
-              <?php if(me()>0) { ?>
-		      
-		      <form class="form-inline" onsubmit="ownStaGram.startComment(this, '<?php echo $VARS->get('id');?>');return false;">
-			    <label>add comment</label><br/>
-			    <input type="text" class="input-medium" placeholder="Type something..." id="comment_text">
-			    <button type="submit" class="btn">Submit</button>
-			</form>
-	      <?php } else { ?>
-	      	      <?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
-	      	      <p class="muted">Login to comment.</p>
-	      	      <?php } ?>
-	      <?php } ?>
               
             </ul>
           </div><!--/.well -->
-          
+          */ ?>
           
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
