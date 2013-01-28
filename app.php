@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 define('projectPath', dirname(__FILE__));
 error_reporting(-1);ini_set('display_errors', 'on');
 
@@ -13,6 +14,9 @@ switch($_REQUEST['action']) {
 	case 'comment' :
 			$res = $own->addComment($_REQUEST['id'], $_REQUEST['comment']);
 			break; 	
+	case 'setstar':
+			$res = $own->setStar($_REQUEST['id'], (int)$_REQUEST['star']);
+			break;
 	case 'register' :
 			$res = $own->register($_REQUEST['nickname'], $_REQUEST['email'], $_REQUEST['password']);
 			break; 	

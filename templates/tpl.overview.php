@@ -11,7 +11,7 @@
           	foreach($VARS->get('list') as $key => $img) {  ?>
             <div class="span3">
             
-            <h3 style='line-height:10px;padding-top:20px;'><?php
+            <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
 		    	if($lastDate!=date("d.m.Y", strtotime($img->get('i_date')))) {
 		    		echo date("d.m.Y", strtotime($img->get('i_date')));
 		    		$lastDate = date("d.m.Y", strtotime($img->get('i_date')));
@@ -20,11 +20,19 @@
 		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
 		    	}
 		    ?></h3>
+		    <h3 style='line-height:10px;padding-top:20px;float:right;padding-right:30px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
 		    
-		    <p><a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
+		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
 		    if($i<9) { ?><img src='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
 		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
-		    } ?></a></p>
+		    } ?></a><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
+		    	<div style='float:left;'><input type=checkbox /></div>
+		    	<div style='float:right;padding-right:30px;'>
+				<img src='resources/cw.png'>
+				<img src='resources/ccw.png'>
+		    	</div>
+		    	<div style='clear:both;'></div>
+		    </div><?php } ?>
 		    <?php if((int)$img->get('views')>0) { ?>
 			    <div style="float:left;font-size:8pt;">
 				<?php echo (int)$img->get('views');?> view<?php if((int)$img->get('views')>1) echo "s";?>
@@ -60,6 +68,19 @@
               -->
             </ul>
           </div><!--/.well -->
+          
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">editing</li>
+              <li class=""><a href="#" onclick="$('.imgedit').toggle();if( $(this).parent().attr('class')=='active' ) { $(this).parent().removeClass('active'); } else {  $(this).parent().addClass('active'); }; return false;">enable editing</a></li>
+              <!--
+              <li><a href="#">oldest first</a></li>
+              <li><a href="#">random</a></li>
+              <li><a href="#">most comments first</a></li>
+              -->
+            </ul>
+          </div><!--/.well -->
+          
         </div><!--/span-->
         
         

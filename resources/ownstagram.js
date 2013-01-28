@@ -201,6 +201,25 @@ var ownStaGram = {
 		});
 	},
 	
+	"star": function(id, obj) {
+		var star = $(obj).find('img').attr('rel');
+		if(star==0) newstar=1; else newstar=0;
+		
+		$(obj).find('img').attr('src', 'resources/fav'+newstar+'.png');
+		$(obj).find('img').attr('rel', newstar);
+		
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": { 'action': 'setstar', 'id': id, 'star': newstar },
+				"dataType": "json",
+				"success": function(data) {
+					
+				}
+		});
+	},
+	
+	
 	"error": function(msg) {
 		alert(msg);
 		return false;
