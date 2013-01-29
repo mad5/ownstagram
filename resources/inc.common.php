@@ -426,8 +426,12 @@ class ownStaGram {
 		return $this->DC->countByQuery($Q);
 	}
 	
-	public function getList($from) {
-		$data = $this->DC->getAllByQuery("SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".(int)$from."' ORDER BY i_date DESC ");
+	public function getList($from, $filter='') {
+		$Q = "SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".(int)$from."' ";
+		if($filter=="fav") $Q .= " AND i_star=1 ";
+		$Q .= " ORDER BY i_date DESC ";
+		
+		$data = $this->DC->getAllByQuery($Q);
 		for($i=0;$i<count($data);$i++) {
 			$data[$i]["views"] = $this->DC->countByQuery("SELECT count(*) FROM ost_views WHERE v_i_fk='".(int)$data[$i]["i_pk"]."'  ");
 			$data[$i]["comments"] = $this->DC->countByQuery("SELECT count(*) FROM ost_comments WHERE co_i_fk='".(int)$data[$i]["i_pk"]."'  ");

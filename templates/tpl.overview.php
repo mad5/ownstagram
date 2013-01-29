@@ -59,8 +59,9 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">sorting</li>
-              <li class="active"><a href="#">newest first</a></li>
+              <li class="nav-header">filter</li>
+              <li class="<?php if(!isset($_GET['filter'])) echo "active";?>"><a href="index.php?action=overview">all</a></li>
+              <li class="<?php if(isset($_GET['filter']) && $_GET['filter']=='fav') echo "active";?>"><a href="index.php?action=overview&filter=fav">favorites</a></li>
               <!--
               <li><a href="#">oldest first</a></li>
               <li><a href="#">random</a></li>

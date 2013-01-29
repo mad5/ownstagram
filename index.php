@@ -143,7 +143,9 @@ switch($_GET['action']) {
 	case 'overview':
 		if(me()<=0) jump2();
 			
-		$list = $own->getList(me());
+		$filter = "";
+		if(isset($_GET['filter']) && $_GET['filter']=='fav') $filter = $_GET["filter"]; 
+		$list = $own->getList(me(), $filter);
 		$tplContent->setVariable("list", $list);
 		$html = $tplContent->get('tpl.overview.php');
 		break;
