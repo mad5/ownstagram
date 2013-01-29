@@ -21,11 +21,16 @@ switch($_GET['action']) {
 			$img = $own->findImage($_GET['img']);
 			$orig = imageCreateFromJpeg(projectPath.'/data/'.$img['i_file']);
 			
+			
+			
 			$wh = imageSx($orig);
 			if(imageSy($orig)<$wh) $wh = imageSy($orig);
 			
 			//imagecopyresampled ( resource $dst_image , resource $src_image , int $dst_x , int $dst_y , int $src_x , int $src_y , int $dst_w , int $dst_h , int $src_w , int $src_h )
 			imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $W, $wh, $wh);
+			
+			if((int)$img['i_rotation']!=0) $im = imagerotate($im, $img['i_rotation']*(-90), 0);
+			
 			header("content-type: image/jpeg");
 			imageJpeg($im, NULL, 90);
 			exit;
@@ -181,7 +186,7 @@ switch($_GET['action']) {
 		$tplContent->setVariable("comments", $comments);
 		$tplContent->setVariable("id", $_GET['id']);
 		
-		$imgsrc = $own->getScaled($data['i_file'], 500,500);
+		$imgsrc = $own->getScaled($data['i_file'], 500,500, $data['i_rotation']);
 		$tplContent->setVariable("imgsrc", $imgsrc);
 		
 		$groups = $own->getGroupList();

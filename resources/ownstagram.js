@@ -218,7 +218,20 @@ var ownStaGram = {
 				}
 		});
 	},
-	
+	"rotate": function(id, rotation) {
+		
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": { 'action': 'rotate', 'id': id, 'rotation': rotation },
+				"dataType": "json",
+				"success": function(data) {
+					var d = new Date();
+					$('#img_'+id).attr("src", "index.php?action=image&img="+data.img+"&w=250&dat="+d.getTime());
+				}
+		});
+	},
+		
 	
 	"error": function(msg) {
 		alert(msg);

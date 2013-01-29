@@ -361,7 +361,7 @@ class ownStaGram {
 		$this->DC->sendQuery("DELETE FROM ost_images WHERE i_pk='".(int)$data['i_pk']."' ");
 	}
 	
-	public function getScaled($fn, $w, $h) {
+	public function getScaled($fn, $w, $h, $rot=0) {
 		
 		if(rand(0,100)>80) $this->unlinkOld();
 		
@@ -374,6 +374,9 @@ class ownStaGram {
 		if(imageSy($orig)<$wh) $wh = imageSy($orig);
 		$cn = 'data/cache/'.md5($fn.$w.$h).".jpg";
 		imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $H, $wh, $wh);
+		
+		if((int)$rot!=0) $im = imagerotate($im, $rot*(-90), 0);
+		
 		imageJpeg($im, projectPath.'/'.$cn, 90);
 		return $cn;
 		
@@ -462,6 +465,13 @@ class ownStaGram {
 		$data = $this->DC->getAllByQuery($Q);
 		return $data;
 	}
+	public function getimagedetails($id) {
+		$data = $this->getDetail($id);
+		if($data["i_pk"]>0) {
+			$res = array("result" => 1, "image" => $data);
+			return $res;
+		}
+	}
 	public function addComment($id, $comment) {
 		$data = $this->getDetail($id);
 		if($data["i_pk"]>0) {
@@ -481,6 +491,18 @@ class ownStaGram {
 		if($data["i_pk"]>0 && $data['i_u_fk']==me()) {
 			$this->DC->sendQuery("UPDATE ost_images SET i_star='".(int)$star."' WHERE i_pk='".$data['i_pk']."' AND i_u_fk='".me()."' ");
 			$res = array("result" => 1);
+		}
+		return $res;
+	}
+	public function rotate($id, $rotation) {
+		$res = array("result" => 0);
+		$data = $this->getDetail($id);
+		if($data["i_pk"]>0 && $data['i_u_fk']==me()) {
+			$R = $data["i_rotation"]+$rotation;
+			if($R<0) $R = 3;
+			if($R>3) $R = 0;
+			$this->DC->sendQuery("UPDATE ost_images SET i_rotation='".(int)$R."' WHERE i_pk='".$data['i_pk']."' AND i_u_fk='".me()."' ");
+			$res = array("result" => 1, "img" => md5($data['i_date'].$data['i_file']));
 		}
 		return $res;
 	}

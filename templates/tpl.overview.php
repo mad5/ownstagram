@@ -23,13 +23,13 @@
 		    <h3 style='line-height:10px;padding-top:20px;float:right;padding-right:30px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
 		    
 		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
-		    if($i<9) { ?><img src='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
-		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
+		    if($i<9) { ?><img src='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
+		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
 		    } ?></a><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
-		    	<div style='float:left;'><input type=checkbox /></div>
+		    	<!--<div style='float:left;'><input type=checkbox /></div>-->
 		    	<div style='float:right;padding-right:30px;'>
-				<img src='resources/cw.png'>
-				<img src='resources/ccw.png'>
+				<a href='#' onclick="ownStaGram.rotate('<?php echo $img->get('id');?>', -1);blur();return false;"><img src='resources/ccw.png' border="0" /></a>
+				<a href='#' onclick="ownStaGram.rotate('<?php echo $img->get('id');?>', 1);blur();return false;"><img src='resources/cw.png' border="0" /></a>
 		    	</div>
 		    	<div style='clear:both;'></div>
 		    </div><?php } ?>

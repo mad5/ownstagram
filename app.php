@@ -14,8 +14,14 @@ switch($_REQUEST['action']) {
 	case 'comment' :
 			$res = $own->addComment($_REQUEST['id'], $_REQUEST['comment']);
 			break; 	
+	case 'getimagedetails':
+			$res = $own->getimagedetails($_REQUEST['id']);
+			break;
 	case 'setstar':
 			$res = $own->setStar($_REQUEST['id'], (int)$_REQUEST['star']);
+			break;
+	case 'rotate':
+			$res = $own->rotate($_REQUEST['id'], (int)$_REQUEST['rotation']);
 			break;
 	case 'register' :
 			$res = $own->register($_REQUEST['nickname'], $_REQUEST['email'], $_REQUEST['password']);
