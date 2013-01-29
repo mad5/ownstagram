@@ -35,7 +35,7 @@ function jump2($action='') {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.9.1";
+	public $VERSION = "1.9.2";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -110,7 +110,8 @@ class ownStaGram {
 			      "s_allowregistration" => $_POST["setting_allow_register"],
 			      "s_allowfriendsstreams" => $_POST["setting_allow_upload"],
 			      "s_imprint" => $_POST["setting_imprint"],
-			      "s_privacy" => $_POST["setting_privacy"]
+			      "s_privacy" => $_POST["setting_privacy"],
+			      "s_osm" => $_POST["setting_enable_osm"]
 			      );
 		#vd($S);
 		#vd($data);
@@ -393,7 +394,11 @@ class ownStaGram {
 	}
 
 	public function getDetail($id) {
-		$data = $this->DC->getByQuery("SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ");
+		$Q = "SELECT ost_images.*,md5(concat(i_file,i_pk,i_date)) as id, ost_user.u_nickname, ost_user.u_country, ost_user.u_city  
+			FROM ost_images 
+			INNER JOIN ost_user ON i_u_fk=u_pk
+			WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ";
+		$data = $this->DC->getByQuery($Q);
 		return $data;
 	}
 	public function updateDetails($id, $data) {
@@ -570,7 +575,7 @@ class ownStaGram {
 	
 	public function getPublics($u_pk=0) {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 ";
-		$Q .= " AND i_u_fk!='".(int)$u_pk."' ";
+		$Q .= " AND i_u_fk!='".(int)$u_pk."' AND i_u_fk!='".me()."' ";
 		$Q .= " ORDER BY rand() LIMIT 20 ";
 		$I = $this->DC->getAllByQuery($Q);
 		return $I;

@@ -59,6 +59,13 @@
 		</div>
 	</label>
 	<br/>
+	<label class="checkbox">
+		<input type="checkbox" value="1" name="setting_enable_osm" class="settingform" <?php echo ($VARS->is_set('s_osm') && $VARS->get('s_osm')==1 ? 'checked' : '');?> /> enable map-display
+		<br/>
+		<div style="font-size:8pt;">
+		Display geoposition along with your images 
+		</div>
+	</label>
 	
 	</div>
 

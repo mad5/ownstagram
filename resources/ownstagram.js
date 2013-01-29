@@ -241,6 +241,9 @@ var ownStaGram = {
 
 
 function openIframe(id) {
+	
+	$('#osmMap').hide();
+	
 	var h1 = $('.navbar').height();
 	var h2 = $(window).height();
 	var html = '<div id="detailiframe" style="position:absolute;top:'+($(window).scrollTop())+'px;left:0;width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;">';

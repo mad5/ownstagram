@@ -31,6 +31,7 @@ $UPDATE_SQL[16] = array('type' => 'newtable', 'table' => 'ost_remotes', 'query' 
 $UPDATE_SQL[17] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_rotation', 'query' => 'ALTER TABLE `ost_images` ADD `i_rotation` tinyint NOT NULL ');
 $UPDATE_SQL[18] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_imprint', 'query' => array('ALTER TABLE `ost_settings` ADD `s_imprint` TEXT NOT NULL '));
 $UPDATE_SQL[19] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_privacy', 'query' => array('ALTER TABLE `ost_settings` ADD `s_privacy` TEXT NOT NULL '));
+$UPDATE_SQL[20] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_osm', 'query' => array('ALTER TABLE `ost_settings` ADD `s_osm` TINYINT NOT NULL DEFAULT 1'));
 
 
 $STEP = -1;
