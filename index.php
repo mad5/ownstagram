@@ -108,6 +108,9 @@ switch($_GET['action']) {
 		break;
 		
 		
+	case 'info':
+		$html = $tplContent->get('tpl.info.php');
+		break;
 	case 'confirmed':
 		$html = $tplContent->get('tpl.register_confirm.php');
 		break;

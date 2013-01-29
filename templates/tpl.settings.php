@@ -3,7 +3,7 @@
 		background-color: #F5F5F5;
 	}
       .form-signin {
-        max-width: 300px;
+        
         padding: 19px 29px 29px;
         margin: 0 auto 20px;
         background-color: #fff;
@@ -27,8 +27,13 @@
         padding: 7px 9px;
       }
 </style>
-<form class="form-signin" onsubmit="ownStaGram.saveSettings(this);return false;">
-	<h2 class="form-signin-heading">Settings</h2>
+
+
+<form onsubmit="ownStaGram.saveSettings(this);return false;">
+<div class="span3">
+
+	<div class="form-signin">
+	<h2 class="form-signin-heading">settings</h2>
 	
 	<label>Title</label>
 	<input type="text" class="input-block-level settingform" placeholder="ownStaGram" value="<?php echo $VARS->get('s_title');?>" name="setting_maintitle"><br/>
@@ -54,5 +59,50 @@
 		</div>
 	</label>
 	<br/>
-	<button class="btn btn-large btn-primary" type="submit">Save settings</button>
+	
+	</div>
+
+</div>
+
+<div class="span3">
+	<div class="form-signin">
+		<h2 class="form-signin-heading">general</h2>
+		
+		<label>Imprint</label>
+		<textarea class="settingform" rows=5 placeholder="insert your imprint here" name="setting_imprint"><?php echo $VARS->get('s_imprint');?></textarea><br/>
+		
+		<label>Privacy-policy</label>
+		<textarea class="settingform" rows=5 placeholder="insert your privacy-policy here" name="setting_privacy"><?php echo $VARS->get('s_privacy');?></textarea><br/>
+		
+	</div>
+</div>
+
+<div class="span3">
+<!--
+	<div class="form-signin">
+		<h2 class="form-signin-heading">distribution</h2>
+		<p>
+			
+		</p>
+	</div>
+-->	
+</div>
+
+<div class="span3">
+	<div class="form-signin">
+		<h2 class="form-signin-heading">involvement</h2>
+		<p>
+		Please keep in mind, that this is a one-man-side-project.
+		I like the idea of hosting my own photo-service a lot.
+		I use it multiple times per day and therefor it is in my own interest to keep this project running.
+		Nevertheless I have limited time, so I am glad if you give me some hints about things not working correct.
+		I also really appreciate to hear your wishes.<br/>
+		Send me a note to: <a href='mailto:info@ownstagram.de'>info@ownstagram.de</a>
+		</p>
+	</div>
+</div>
+
+<div style='clear:both;'></div>
+
+<button class="btn btn-large btn-primary" type="submit">Save settings</button>
 </form>

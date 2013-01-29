@@ -101,6 +101,12 @@ echo "</pre>";
       <div style='float:left;'>
         <p>
         OwnStaGram V<?php echo $GLOBALS["own"]->VERSION; ?> - a clone on my own host
+        <?php if( $VARS->get('s_imprint')!="") { ?>
+        	- <a href='index.php?action=info&info=imprint'>imprint</a>
+        <?php } ?>
+        <?php if( $VARS->get('s_privacy')!="") { ?>
+        	- <a href='index.php?action=info&info=privacy'>privacy</a>
+        <?php } ?>
         </p>
         </div>
         

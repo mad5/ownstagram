@@ -108,7 +108,9 @@ class ownStaGram {
 		$data = array("s_subtitle" => $_POST["setting_title"],
 			      "s_title" => $_POST["setting_maintitle"],
 			      "s_allowregistration" => $_POST["setting_allow_register"],
-			      "s_allowfriendsstreams" => $_POST["setting_allow_upload"] 
+			      "s_allowfriendsstreams" => $_POST["setting_allow_upload"],
+			      "s_imprint" => $_POST["setting_imprint"],
+			      "s_privacy" => $_POST["setting_privacy"]
 			      );
 		#vd($S);
 		#vd($data);

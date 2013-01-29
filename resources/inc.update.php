@@ -29,6 +29,9 @@ $UPDATE_SQL[14] = array('type' => 'newfield', 'table' => 'ost_user', 'field' => 
 $UPDATE_SQL[15] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_instance', 'query' => array('ALTER TABLE `ost_settings` ADD `s_instance` varchar(255) NOT NULL ', "UPDATE ost_settings SET s_instance=md5('".$_SERVER['HTTP_HOST'].microtime(true)."')"));
 $UPDATE_SQL[16] = array('type' => 'newtable', 'table' => 'ost_remotes', 'query' => 'CREATE TABLE ost_remotes (`r_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `r_u_fk` BIGINT NOT NULL , `r_server` VARCHAR(255) NOT NULL ) ENGINE = InnoDB');
 $UPDATE_SQL[17] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_rotation', 'query' => 'ALTER TABLE `ost_images` ADD `i_rotation` tinyint NOT NULL ');
+$UPDATE_SQL[18] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_imprint', 'query' => array('ALTER TABLE `ost_settings` ADD `s_imprint` TEXT NOT NULL '));
+$UPDATE_SQL[19] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_privacy', 'query' => array('ALTER TABLE `ost_settings` ADD `s_privacy` TEXT NOT NULL '));
+
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');
