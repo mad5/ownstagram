@@ -66,6 +66,16 @@
 		Display geoposition along with your images 
 		</div>
 	</label>
+	<br/>
+	<label class="checkbox">
+		<input type="checkbox" value="1" name="setting_homecontent" class="settingform" <?php echo ($VARS->is_set('s_homecontent') && $VARS->get('s_homecontent')==1 ? 'checked' : '');?> /> show default homepage-content
+		<br/>
+		<div style="font-size:8pt;">
+		You can hide the default home-content.<br/>
+		If you want to create your own home-content, you can rename or copy the file named 'tpl.home_my.php.dist' inside templates-folder to 'tpl.home_my.php' and set your own content.<br/>
+		If you update to a new version of ownStaGram this file will not be touched.
+		</div>
+	</label>
 	
 	</div>
 

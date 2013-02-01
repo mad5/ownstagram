@@ -30,6 +30,11 @@ switch($_GET['action']) {
 			imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $W, $wh, $wh);
 			
 			if((int)$img['i_rotation']!=0) $im = imagerotate($im, $img['i_rotation']*(-90), 0);
+
+			if($img['i_set']>0 && isset($_GET['set'])) {
+				$stack = imageCreateFromPng(projectPath.'/resources/stack.png');
+				imagecopyresampled($im, $stack, 0,0, 0, 0, $W, $W, imageSx($stack), imageSy($stack));
+			}
 			
 			header("content-type: image/jpeg");
 			imageJpeg($im, NULL, 90);
@@ -146,11 +151,39 @@ switch($_GET['action']) {
 	case 'overview':
 		if(me()<=0) jump2();
 			
+		if(isset($_POST['changeset']) && $_POST['changeset']==1) {
+			if((int)$_POST['set']==-1) {
+				$_POST['set'] = 0;
+				if(trim($_POST['newsetname'])!='') {
+					$_POST['set'] = $own->newset($_POST['newsetname']);
+				}
+			}
+			for($i=0;$i<count($_POST['ids']);$i++) {
+				$detail = $own->getDetail($_POST['ids'][$i]);
+				if($detail!="" && $detail['i_u_fk']==me()) {
+					$new = array(
+						'i_set' => (int)$_POST['set']
+					);
+					$own->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
+				}
+			}
+		}
+		
 		$filter = "";
 		if(isset($_GET['filter']) && $_GET['filter']=='fav') $filter = $_GET["filter"]; 
 		$list = $own->getList(me(), $filter);
 		$tplContent->setVariable("list", $list);
+
+		$sets = $own->getSetList();
+		$tplContent->setVariable("sets", $sets);
+		
 		$html = $tplContent->get('tpl.overview.php');
+		break;
+	
+	case 'discover':
+		$list = $own->getPublics(me(), 100, 'i_pk DESC');
+		$tplContent->setVariable("list", $list);
+		$html = $tplContent->get('tpl.discover.php');
 		break;
 	
 	case 'delete':
@@ -196,14 +229,23 @@ switch($_GET['action']) {
 		
 		$groups = $own->getGroupList();
 		$tplContent->setVariable("groups", $groups);
+
+		$sets = $own->getSetList();
+		$tplContent->setVariable("sets", $sets);
 		
 		$tpl->setVariable("detailtitle", $data['i_title']." @ ");
 		
-		$forthis = $own->getOthers($data['i_u_fk']);
-		$tplContent->setVariable("forthis", $forthis);
+		if($data['i_set']>0) {
+			$setimages = $own->getOtherSetImages($data['i_set']);
+			$tplContent->setVariable("setname", $setimages[0]['se_name']);
+			$tplContent->setVariable("setimages", $setimages);
+		} else {
+			$forthis = $own->getOthers($data['i_u_fk']);
+			$tplContent->setVariable("forthis", $forthis);
 		
-		$others = $own->getPublics($data['i_u_fk']);
-		$tplContent->setVariable("others", $others);
+			$others = $own->getPublics($data['i_u_fk']);
+			$tplContent->setVariable("others", $others);			
+		}
 		
 		$html = $tplContent->get('tpl.detail.php');
 		break;
@@ -211,12 +253,17 @@ switch($_GET['action']) {
 	case 'upload':
 		if(me()<=0) jump2();
 		if(isset($_POST['upload']) && $_POST['upload']==1) {
-			
 			$res = $own->upload($_FILES, me());
 			$id = $res['id'];
 			header("location: index.php?action=detail&id=".$id);
 			exit;
 		}
+		
+		$groups = $own->getGroupList();
+		$tplContent->setVariable("groups", $groups);
+		$sets = $own->getSetList();
+		$tplContent->setVariable("sets", $sets);
+		
 		$html = $tplContent->get('tpl.upload.php');
 		break;
 	case 'settings':

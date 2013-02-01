@@ -32,10 +32,30 @@ function jump2($action='') {
 	header("location: index.php?action=".$action);
 	exit;
 }
+function blurredZoom($u_fk) {
+	$zoom = 16;
+	 if(me()<=0) {
+		 $zoom = 13;
+	 } else if(me()==$u_fk) {
+	 } else {
+		 $zoom = 15;
+	 }
+	 return $zoom;
+}
+function blurred($u_fk) {
+	if(me()<=0) {
+		 $add = 0.0012*(rand(0,1000)/1000-0.5);
+	 } else if(me()==$u_fk) {
+		 $add = 0;
+	 } else {
+		 $add = 0.004*(rand(0,1000)/1000-0.5);
+	 }
+	 return $add;
+}
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.9.2";
+	public $VERSION = "1.9.3";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -111,7 +131,8 @@ class ownStaGram {
 			      "s_allowfriendsstreams" => $_POST["setting_allow_upload"],
 			      "s_imprint" => $_POST["setting_imprint"],
 			      "s_privacy" => $_POST["setting_privacy"],
-			      "s_osm" => $_POST["setting_enable_osm"]
+			      "s_osm" => $_POST["setting_enable_osm"],
+			      "s_homecontent" => $_POST["setting_homecontent"],
 			      );
 		#vd($S);
 		#vd($data);
@@ -335,6 +356,15 @@ class ownStaGram {
 		return $res;
 	}
 	
+	public function newset($setname) {
+		$SE = array("se_u_fk" => me(),
+			    "se_date" => now(),
+			    "se_name" => htmlspecialchars(stripslashes(trim($setname)))
+			);
+		$se_pk = $this->DC->insert($SE, "ost_sets");
+		return $se_pk;
+	}
+	
 	public function upload($files, $u_pk) {
 		
 		$path = (int)$u_pk.'/'.date('Ymd');
@@ -342,19 +372,46 @@ class ownStaGram {
 			mkdir('data/'.$path, 0777, true);
 			chmod('data/'.$path, 0777);
 		}
-		$fn = $path.'/'.microtime(true).'.jpg';
-		move_uploaded_file($files['img']['tmp_name'], 'data/'.$fn);
 		
-		$data = array('i_u_fk' => (int)$u_pk,
-				'i_date' => now(),
-				'i_file' => $fn,
-				'i_title' => htmlspecialchars(stripslashes($_POST['title'])),
-				'i_public' => (int)$_POST['public']
-			);
-		$pk = $this->DC->insert($data, 'ost_images');
-		$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
+		$se_pk = 0;
+		if(isset($_POST["sameset"])) {
+			if($_POST["sameset"]==1) {
+				if(trim($_POST["setname"])!="") {
+					$se_pk = $this->newset($_POST["setname"]);
+				}
+			} else if($_POST["sameset"]==2) {
+				if((int)$_POST["knownset"]>0) {
+					$se_pk = $this->DC->getByQuery("SELECT se_pk FROM ost_sets WHERE se_pk='".(int)$_POST["knownset"]."' AND se_u_fk='".me()."' ", "se_pk");
+				}
+			}
+		}
 		
-		$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
+		$subnr = 0;
+		for($i=0;$i<count($files['img']['tmp_name']);$i++) {
+		
+			$fn = $path.'/'.microtime(true).($subnr>0 ? '_'.$subnr : '').'.jpg';
+			
+			move_uploaded_file($files['img']['tmp_name'][$i], 'data/'.$fn);
+			
+			$T = trim($_POST['title']);
+			if($T!="") {
+				$T .= ($subnr>0 ? ' ('.$subnr.')' : '');
+			}
+			
+			$data = array('i_u_fk' => (int)$u_pk,
+					'i_date' => now(),
+					'i_file' => $fn,
+					'i_title' => htmlspecialchars(stripslashes($T)),
+					'i_public' => (int)$_POST['public'],
+					'i_set' => $se_pk 
+				);
+			$pk = $this->DC->insert($data, 'ost_images');
+			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
+			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
+			$subnr++;
+		}
+		
+		
 		return $res;
 		                             
 	}
@@ -404,10 +461,19 @@ class ownStaGram {
 	public function updateDetails($id, $data) {
 		$detail = $this->getDetail($id);
 		if($detail['i_u_fk']!=me()) die("no access!");
+		
+		if((int)$data['set']==-1) {
+			$data['set'] = 0;
+			if(trim($_POST['newsetname'])!='') {
+				$data['set'] = $this->newset($_POST['newsetname']);
+			}
+		}
+		
 		$new = array(
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
 				'i_public' => (int)$data['public'],
-				'i_g_fk' => (int)$data['group']
+				'i_g_fk' => (int)$data['group'],
+				'i_set' => (int)$data['set']
 				);
 		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}
@@ -557,6 +623,19 @@ class ownStaGram {
 		$U = $this->DC->getAllByQuery($Q);
 		return $U;
 	}
+	public function getSetList($page=0) {
+		//$pp = 20;
+		$Q = "SELECT * FROM ost_sets WHERE se_u_fk='".me()."' ORDER BY se_pk DESC "; // LIMIT ".$page.",".$pp;
+		$U = $this->DC->getAllByQuery($Q);
+		return $U;
+	}
+	public function getOtherSetImages($set) {
+		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images
+			INNER JOIN ost_sets ON se_pk=i_set
+			WHERE i_set='".(int)$set."' ORDER BY i_pk "; // LIMIT ".$page.",".$pp;
+		$U = $this->DC->getAllByQuery($Q);
+		return $U;
+	}
 	public function getGroupData($g_pk) {
 		$Q = "SELECT * FROM ost_groups WHERE g_pk='".(int)$g_pk."' AND g_u_fk='".me()."' ";
 		$data = $this->DC->getByQuery($Q);
@@ -573,12 +652,17 @@ class ownStaGram {
 		}
 	}	
 	
-	public function getPublics($u_pk=0) {
+	public function getPublics($u_pk=0, $limit=20, $order='rand()') {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 ";
 		$Q .= " AND i_u_fk!='".(int)$u_pk."' AND i_u_fk!='".me()."' ";
-		$Q .= " ORDER BY rand() LIMIT 20 ";
-		$I = $this->DC->getAllByQuery($Q);
-		return $I;
+		$Q .= " ORDER BY ".$order." LIMIT ".$limit;
+		$data = $this->DC->getAllByQuery($Q);
+		for($i=0;$i<count($data);$i++) {
+			$data[$i]["views"] = $this->DC->countByQuery("SELECT count(*) FROM ost_views WHERE v_i_fk='".(int)$data[$i]["i_pk"]."'  ");
+			$data[$i]["comments"] = $this->DC->countByQuery("SELECT count(*) FROM ost_comments WHERE co_i_fk='".(int)$data[$i]["i_pk"]."'  ");
+		}
+		
+		return $data;
 	}
 	public function getOthers($u_pk, $limit=20) {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;

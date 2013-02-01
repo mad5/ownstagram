@@ -155,7 +155,11 @@ var ownStaGram = {
 							window.location = 'index.php?action=overview';
 						}
 					} else {
-						$('#screen_settings').fadeIn();
+						if(ownStaGram.type=="app") {
+							$('#screen_settings').fadeIn();
+						} else {
+							alert('sorry, wrong credentials...');
+						}
 					}
 				}
 		});
@@ -232,6 +236,20 @@ var ownStaGram = {
 		});
 	},
 		
+	'editchecks': function() {
+		
+		if($('.editcheck:checked').length>0) {
+			$("#checkeditbox").slideDown();
+			
+			$('#changesetform').find('input[type=hidden].imgids').remove();
+			$('.editcheck:checked').each(function() {
+					$('#changesetform').append('<input type=hidden name="ids[]" value="'+$(this).val()+'" class="imgids" />');
+			});
+		} else {
+			$("#checkeditbox").slideUp();
+		}
+		
+	},
 	
 	"error": function(msg) {
 		alert(msg);

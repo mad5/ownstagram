@@ -13,8 +13,11 @@
             <form method="post" enctype="multipart/form-data" action="index.php?action=upload">
 		<input type="hidden" name="upload" value="1" />            
             	<br/>
-            	<label>select an image</label>
-            	<input type="file" name="img" />
+            	<label>
+            	<span class="singleFileLabel" style="display:block">select one image</span>
+            	<span class="multipleFileLabel" style="display:none">select one or more images (use shift/ctrl)</span>
+            	</label>
+            	<input type="file" name="img[]" multiple="multiple"/>
             	<br/><br/>
             	<label>title</label>
             	<input type="text" name="title" />
@@ -30,12 +33,38 @@
             		<input type="radio" name="public" value="-1" /> make picture private<br/>
             		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>only you can see the image.</span>
             	</label>
+            	
+            	<span class="multipleFileLabel" style="display:none;">
+            		<br/>
+			<label class="checkbox">
+				<input type="radio" name="sameset" value="0" checked /> not a set<br/>
+			</label>
+            		
+			<label class="checkbox">
+				<input type="radio" name="sameset" value="1" /> add to new set
+			</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=''>set-name: <input type='text' name='setname' value="" /></span>
+			<br/>
+            		
+			<label class="checkbox">
+				<input type="radio" name="sameset" value="2" /> or add to existing set
+			</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="knownset">
+				<option value='0'></option>
+				<?php foreach($VARS->get('sets') as $key => $set) { ?>
+					<option value='<?php echo $set->get('se_pk');?>' ><?php echo $set->get('se_name');?></option>
+				<?php } ?>
+				</select>
+
+			<br/>
+            	
+            	</span>
+            	
             	<br/>
                 <p><button class="btn btn-primary btn-large">Upload picture &raquo;</button></p>
 
             </form>
-            
-            
             
           </div>
 

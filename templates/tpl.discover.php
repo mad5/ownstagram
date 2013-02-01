@@ -26,20 +26,11 @@
 		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
 		    	}
 		    ?></h3>
-		    <h3 style='line-height:10px;padding-top:20px;float:right;padding-right:30px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
 		    
 		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
 		    if($i<9) { ?><img src='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php  
 		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php
-		    } ?></a><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
-		    	<?php if($img->get('i_set')==0) {?><div style='float:left;'><input type=checkbox class='editcheck' value='<?php echo $img->get('id');?>' onclick="ownStaGram.editchecks();" /></div><?php } ?>
-		    	<div style='float:right;padding-right:30px;'>
-				<a href='#' onclick="ownStaGram.rotate('<?php echo $img->get('id');?>', -1);blur();return false;"><img src='resources/ccw.png' border="0" /></a>
-				<a href='#' onclick="ownStaGram.rotate('<?php echo $img->get('id');?>', 1);blur();return false;"><img src='resources/cw.png' border="0" /></a>
-		    	</div>
-		    	<div style='clear:both;'></div>
-		    </div><?php } ?>
-		    <div>
+		    } ?></a>
 		    <?php if((int)$img->get('views')>0) { ?>
 			    <div style="float:left;font-size:8pt;">
 				<?php echo (int)$img->get('views');?> view<?php if((int)$img->get('views')>1) echo "s";?>
@@ -50,7 +41,6 @@
 				<?php echo (int)$img->get('comments');?> comment<?php if((int)$img->get('comments')>1) echo "s";?>
 			    </div>
 		    <?php } ?>
-		    </div>
             </div><!--/span-->
           	  <?php
           	  if($i++%4==3) {
@@ -64,61 +54,18 @@
           </div><!--/row-->
         </div><!--/span-->
         
-        
-        
-        <div class="span3" style="position:fixed; right:20px;">
+        <div class="span3" style="position:relative;">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">filter</li>
-              <li class="<?php if(!isset($_GET['filter'])) echo "active";?>"><a href="index.php?action=overview">all</a></li>
-              <li class="<?php if(isset($_GET['filter']) && $_GET['filter']=='fav') echo "active";?>"><a href="index.php?action=overview&filter=fav">favorites</a></li>
-              <!--
-              <li><a href="#">oldest first</a></li>
-              <li><a href="#">random</a></li>
-              <li><a href="#">most comments first</a></li>
-              -->
+              <li class="<?php if(!isset($_GET['filter'])) echo "active";?>"><a href="index.php?action=discover">all</a></li>
             </ul>
           </div><!--/.well -->
           
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">editing</li>
-              <li class=""><a href="#" onclick="$('.imgedit').toggle();if( $(this).parent().attr('class')=='active' ) { $(this).parent().removeClass('active'); } else {  $(this).parent().addClass('active'); }; return false;">enable editing</a></li>
-              <!--
-              <li><a href="#">oldest first</a></li>
-              <li><a href="#">random</a></li>
-              <li><a href="#">most comments first</a></li>
-              -->
-            </ul>
-          </div><!--/.well -->
-
-          <div class="well sidebar-nav" id='checkeditbox' style='display:none;'>
-            <ul class="nav nav-list">
-              <li class="nav-header">edit photos</li>
-              	
-		<form method="post" id='changesetform'>
-		<input type='hidden' name='changeset' value='1' />
-			
-              	<label>add to set</label>
-              	<select name="set" onchange="if(this.value==-1) $('#newset').slideDown(); else $('#newset').slideUp();">
-			<option value='0'>-- none --</option>
-			<?php foreach($VARS->get('sets') as $key => $set) { ?>
-				<option value='<?php echo $set->get('se_pk');?>' <?php if($VARS->get('i_set')==$set->get('se_pk')) echo 'selected'; ?> ><?php echo $set->get('se_name');?></option>
-			<?php } ?>
-			<option value='-1'>** NEW SET **</option>
-		</select>
-		<div style='display:none;' id='newset'>
-			<label>new set:</label>
-			<input type="text" name="newsetname" value="" placeholder="new set name">
-		</div>              	
-		<input type="submit" value='ok'>
-		</form>
-              	
-            </ul>
-          </div><!--/.well -->          
+          
           
 
-        <?php if( $VARS->is_set('s_osm') && $VARS->get('s_osm')==1 ) { ?>
+        <?php if( $VARS->get('s_osm')==1 ) { ?>
 		
 		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		

@@ -43,6 +43,7 @@
             	    &bull;
             	    <a href="#" onclick="ownStaGram.startLogout();return false;" class="navbar-link">Logout</a>
             <?php } else { ?>
+            	    
             	    <a href="index.php?action=login" class="navbar-link">Login</a>
             	    <?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
             	    	    or <a href="index.php?action=register" class="navbar-link">Register</a>
@@ -50,29 +51,37 @@
             <?php } ?>
             </p>
             <ul class="nav">
-              <li <?php if(!isset($_GET['action']) || $_GET['action']=='') echo 'class="active"';?>><a href="index.php">Home</a></li>
+              <li <?php if(!isset($_GET['action']) || $_GET['action']=='') echo 'class="active"';?>><a href="index.php">home</a></li>
               <?php if(me()>0) { ?>
-              	<li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">Overview</a></li>
+              	<li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">my photos</a></li>
               	
               	<?php if( getS('user', 'u_email')==ownStaGramAdmin || ($VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 ) ) { ?>
               		<?php if( getS('user', 'u_remoteserver')=='') { ?>
-              			<li <?php if(isset($_GET['action']) && $_GET['action']=='upload') echo 'class="active"';?>><a href="index.php?action=upload">Upload</a></li>
+              			<li <?php if(isset($_GET['action']) && $_GET['action']=='upload') echo 'class="active"';?>><a href="index.php?action=upload">upload</a></li>
               		<?php } ?>
+              	<?php } ?>
+              	<?php if( $VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 )  { ?>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='discover') echo 'class="active"';?>><a href="index.php?action=discover">discover</a></li>
               	<?php } ?>
               	
               	<?php if(getS('user', 'u_email')==ownStaGramAdmin) { ?>
-              		<li <?php if(isset($_GET['action']) && $_GET['action']=='settings') echo 'class="active"';?>><a href="index.php?action=settings">Settings</a></li>
-              		<li <?php if(isset($_GET['action']) && $_GET['action']=='users') echo 'class="active"';?>><a href="index.php?action=users">Users</a></li>
+              		<li <?php if(isset($_GET['action']) && $_GET['action']=='settings') echo 'class="active"';?>><a href="index.php?action=settings">settings</a></li>
+              		<li <?php if(isset($_GET['action']) && $_GET['action']=='users') echo 'class="active"';?>><a href="index.php?action=users">users</a></li>
               	<?php } ?>
        		<?php if( getS('user', 'u_remoteserver')=='') { ?>
-       			<li <?php if(isset($_GET['action']) && $_GET['action']=='groups') echo 'class="active"';?>><a href="index.php?action=groups">Groups</a></li>
-       			<li <?php if(isset($_GET['action']) && $_GET['action']=='profile') echo 'class="active"';?>><a href="index.php?action=profile">Profile</a></li>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='groups') echo 'class="active"';?>><a href="index.php?action=groups">groups</a></li>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='profile') echo 'class="active"';?>><a href="index.php?action=profile">profile</a></li>
               	<?php } ?>
               <?php } else { ?>
-              	 <li <?php if(isset($_GET['action']) && $_GET['action']=='login') echo 'class="active"';?>><a href="index.php?action=login">Login</a></li>
+              	      
+              	<?php if( $VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 )  { ?>
+       			<li <?php if(isset($_GET['action']) && $_GET['action']=='discover') echo 'class="active"';?>><a href="index.php?action=discover">discover</a></li>
+              	<?php } ?>
+              	      
+              	 <li <?php if(isset($_GET['action']) && $_GET['action']=='login') echo 'class="active"';?>><a href="index.php?action=login">login</a></li>
               	 
               	 <?php if( $VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ) { ?>
-              	 	 <li <?php if(isset($_GET['action']) && $_GET['action']=='register') echo 'class="active"';?>><a href="index.php?action=register">Register</a></li>
+              	 	 <li <?php if(isset($_GET['action']) && $_GET['action']=='register') echo 'class="active"';?>><a href="index.php?action=register">register</a></li>
               	 <?php } ?>
               <?php } ?>
               
@@ -103,7 +112,7 @@ echo "</pre>";
       <footer>
       <div style='float:left;'>
         <p>
-        OwnStaGram V<?php echo $GLOBALS["own"]->VERSION; ?> - a clone on my own host
+        OwnStaGram V<?php echo $GLOBALS["own"]->VERSION; ?> - a photo-sharing-service on my own host
         <?php if( $VARS->get('s_imprint')!="") { ?>
         	- <a href='index.php?action=info&info=imprint'>imprint</a>
         <?php } ?>
@@ -121,7 +130,8 @@ echo "</pre>";
         
         <div style='float:right;'>
         <p>
-        <a href='https://play.google.com/store/apps/details?id=org.apache.cordova.ownstagram' target="_blank">GET IT ON Google Play</a>
+        <a href='https://play.google.com/store/apps/details?id=org.apache.cordova.ownstagram' target="_blank" style='font-size:8pt;'>get the app on Google Play</a><br/>
+        <a href='https://sourceforge.net/projects/ownstagram/' target='_blank' style='font-size:8pt;'>and the script on sourceforge</a>
         </p>
         </div>
         <div style="clear:both;"></div>
@@ -137,9 +147,10 @@ echo "</pre>";
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/ownstagram.js"></script>
 
-<?php if(isset($_GET['action']) && $_GET['action']=='overview') { ?>
+<?php if(isset($_GET['action']) && ($_GET['action']=='overview' || $_GET['action']=='discover')) { ?>
 <script src="resources/lazyloader.js"></script>
 
+       
 <script>
 $(function() {
   $("img.lazy").lazyloader({
@@ -148,9 +159,24 @@ $(function() {
         imgSrcAttr : 'imgsrc',
         beforeLoadCls: 'loading'
     });
+  
 });
 </script>
 <?php } ?>
+<script>
+function supportMultiple() {
+	var el = document.createElement("input");
+	return ("multiple" in el);
+}
+
+$(function() {
+  if(supportMultiple()) {
+  	  
+            $(".multipleFileLabel").show();
+            $(".singleFileLabel").hide();
+  }
+});
+</script>
 
 <?php if(me()>0 && getS('user', 'u_email')==ownStaGramAdmin) { ?>
         <script>

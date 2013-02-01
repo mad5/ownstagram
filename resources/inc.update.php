@@ -32,7 +32,9 @@ $UPDATE_SQL[17] = array('type' => 'newfield', 'table' => 'ost_images', 'field' =
 $UPDATE_SQL[18] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_imprint', 'query' => array('ALTER TABLE `ost_settings` ADD `s_imprint` TEXT NOT NULL '));
 $UPDATE_SQL[19] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_privacy', 'query' => array('ALTER TABLE `ost_settings` ADD `s_privacy` TEXT NOT NULL '));
 $UPDATE_SQL[20] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_osm', 'query' => array('ALTER TABLE `ost_settings` ADD `s_osm` TINYINT NOT NULL DEFAULT 1'));
-
+$UPDATE_SQL[21] = array('type' => 'newtable', 'table' => 'ost_sets', 'query' => 'CREATE TABLE `ost_sets` ( `se_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY , `se_u_fk` BIGINT NOT NULL , `se_date` DATETIME NOT NULL , `se_name` VARCHAR( 50 ) NOT NULL ) ENGINE = InnoDB');
+$UPDATE_SQL[22] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_set', 'query' => 'ALTER TABLE `ost_images` ADD `i_set` bigint(20) NOT NULL ');
+$UPDATE_SQL[23] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_homecontent', 'query' => array('ALTER TABLE `ost_settings` ADD `s_homecontent` TINYINT NOT NULL DEFAULT 1 '));
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

@@ -13,3 +13,5 @@ Installation is very easy if you follow this few steps:
 7) register with the admin-emailaddress
 8) install the android-app and point the url to your server
 
+You find the project-files at: https://sourceforge.net/projects/ownstagram/ 
+You find the android-app at: https://play.google.com/store/apps/details?id=org.apache.cordova.ownstagram

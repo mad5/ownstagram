@@ -17,6 +17,26 @@
 			  <a href='index.php?action=overview' onclick="return closeIframe();" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
 			  </div>
                 <?php } ?>
+
+		  <?php if($VARS->get('i_set')!=0) { ?>
+
+		  <div class="well sidebar-nav">
+		    <ul class="nav nav-list">
+		    <li class="nav-header">Set of images: <?php echo $VARS->get('setname');?></li>
+		  	  
+		  	  <?php foreach($VARS->get('setimages') as $key => $img) { 
+				?><a href='index.php?action=detail&id=<?php echo $img->get("id");?>'><?php
+				?><img src='index.php?action=image&amp;img=<?php 
+					echo md5($img->get('i_date').$img->get('i_file')); 
+					?>&amp;w=50' width=50 height=50 style='border: solid 1px <?php echo ( $img->get("id")==$_GET['id'] ? 'red' : 'transparent'); ?>;margin:3px;'/><?php
+				?></a><?php
+		  	  } ?>
+		  	  
+		  	  <div style="clear:both;height:5px;"></div>
+		  	  </ul>
+		     </div><!--/.well -->
+		  <?php } ?> 
+
                 
                   <div class="well sidebar-nav" id='links'>
                   
@@ -34,7 +54,6 @@
                   	  
                   <?php } ?>
 		
-                  
                   <?php if($VARS->get('i_u_fk')==me()) { ?>
 			  <div class="well sidebar-nav">
 			  	<a href='#' onclick="if(confirm('delete image?')) { window.top.location='index.php?action=delete&id=<?php echo $VARS->get('id');?>' } return false;"  id='maillink' class="btn btn-link"><i class="icon-trash"></i> delete image</a> 
@@ -74,7 +93,20 @@
 								<option value='<?php echo $group->get('g_pk');?>' <?php if($VARS->get('i_g_fk')==$group->get('g_pk')) echo 'selected'; ?> ><?php echo $group->get('g_name');?></option>
 							<?php } ?>
 						</select>
-					
+
+					<label>Set</label>
+						<select name="set" onchange="if(this.value==-1) $('#newset').slideDown(); else $('#newset').slideUp();">
+							<option value='0'>-- none --</option>
+							<?php foreach($VARS->get('sets') as $key => $set) { ?>
+								<option value='<?php echo $set->get('se_pk');?>' <?php if($VARS->get('i_set')==$set->get('se_pk')) echo 'selected'; ?> ><?php echo $set->get('se_name');?></option>
+							<?php } ?>
+							<option value='-1'>** NEW SET **</option>
+						</select>
+						<div style='display:none;' id='newset'>
+							<label>new set:</label>
+							<input type="text" name="newsetname" value="" placeholder="new set name">
+						</div>
+						
 					<br/>
 					<p><button class="btn">save changes &raquo;</button></p>
 				  </fieldset>
@@ -82,24 +114,28 @@
 			  </div>
                   <?php } ?>
                   
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Public photos from same user</li>
-              <?php foreach($VARS->get('forthis') as $key => $other) { 
-          		?><a href='index.php?action=detail&id=<?php echo $other->get("id");?>'><?php 
-          		?><img src='index.php?action=image&amp;img=<?php echo md5($other->get('i_date').$other->get('i_file')); ?>&amp;w=47' width=47 height=47 /><?php
-          		?></a><?php
-              } ?>
-          </ul>
-            <ul class="nav nav-list">
-              <li class="nav-header">Public photos from other users</li>
-              <?php foreach($VARS->get('others') as $key => $other) { 
-          		?><a href='index.php?action=detail&id=<?php echo $other->get("id");?>'><?php 
-          		?><img src='index.php?action=image&amp;img=<?php echo md5($other->get('i_date').$other->get('i_file')); ?>&amp;w=47' width=47 height=47 /><?php
-          		?></a><?php
-              } ?>
-          </ul>
-          </div><!--/.well -->                  
+		  
+		  <?php if($VARS->get('i_set')==0 && $VARS->get('i_u_fk')!=me()) { ?>
+				  
+			  <div class="well sidebar-nav">
+			    <ul class="nav nav-list">
+			      <li class="nav-header">Public photos from same user</li>
+			      <?php foreach($VARS->get('forthis') as $key => $other) { 
+					?><a href='index.php?action=detail&id=<?php echo $other->get("id");?>'><?php 
+					?><img src='index.php?action=image&amp;img=<?php echo md5($other->get('i_date').$other->get('i_file')); ?>&amp;w=47' width=47 height=47 /><?php
+					?></a><?php
+			      } ?>
+			  </ul>
+			    <ul class="nav nav-list">
+			      <li class="nav-header">Public photos from other users</li>
+			      <?php foreach($VARS->get('others') as $key => $other) { 
+					?><a href='index.php?action=detail&id=<?php echo $other->get("id");?>'><?php 
+					?><img src='index.php?action=image&amp;img=<?php echo md5($other->get('i_date').$other->get('i_file')); ?>&amp;w=47' width=47 height=47 /><?php
+					?></a><?php
+			      } ?>
+			  </ul>
+			  </div><!--/.well -->
+		  <?php } ?>                  
                   
         </div>
 
@@ -110,7 +146,7 @@
 			<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
 		  </div>
 		  
-		  <?php if(me()==$VARS->get('i_u_fk')) { ?>
+		  <?php if(me()==$VARS->get('i_u_fk') && $VARS->get('i_set')==0) { ?>
 		  <div style="float:right;">
 			
 			<?php foreach($VARS->get('next') as $key => $img) { ?>
@@ -133,6 +169,7 @@
 		  <?php } ?>
 		  
 		  <div style="clear:both;"></div>
+		  
 		  
 		  <?php /* <img src='index.php?action=image&amp;img=<?php echo md5($VARS->get('i_date').$VARS->get('i_file')); ?>&amp;w=500' width=500 height=500 /> */ ?>
 		  
@@ -182,7 +219,7 @@
           
         </div><!--/span-->
         
-        <div class="span3">
+        <div class="span3" style="position:fixed; right:20px;">
         
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
@@ -205,29 +242,13 @@
          </div>
         <?php } ?>
         
-        <?php if( $VARS->get('s_osm')==1 ) { ?>
+        <?php if( $VARS->is_set('s_osm') && $VARS->get('s_osm')==1 ) { ?>
 		<?php if($VARS->get('i_lng')!=0 /* && me()==$VARS->get('i_u_fk') */ ) { ?>
 		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		
 		<div class="well sidebar-nav" style='padding: 10px 10px 10px 10px;'>
 		<div id="osmMap" style="height:250px;border-radius: 5px;"></div>
 		</div>
-		 <?php
-		 $zoom = 16;
-		 if(me()<=0) {
-			 $add_lng = 0.0012*(rand(0,1000)/1000-0.5);
-			 $add_lat = 0.0012*(rand(0,1000)/1000-0.5);
-			 $zoom = 13;
-		 } else if(me()==$VARS->get('i_u_fk')) {
-		 	 $add_lng = 0;
-			 $add_lat = 0;
-		 } else {
-		 	 $add_lng = 0.004*(rand(0,1000)/1000-0.5);
-			 $add_lat = 0.004*(rand(0,1000)/1000-0.5);
-			 $zoom = 15;
-		 }
-		 //vd($add_lng." / ".$add_lat." / ".rand(0,1000)/1000);
-		 ?>
 		<script>
 			var map;
 		      function initOSM() {
@@ -235,20 +256,33 @@
 				var mapnik         = new OpenLayers.Layer.OSM();
 				var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
 				var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
-				var position       = new OpenLayers.LonLat(<?php echo $VARS->get('i_lng')+$add_lng;?>,<?php echo $VARS->get('i_lat')+$add_lat;?>).transform( fromProjection, toProjection);
-				var zoom           = <?php echo $zoom; ?>; 
+				var position       = new OpenLayers.LonLat(<?php echo $VARS->get('i_lng')+blurred($VARS->get('i_u_fk'));?>,<?php echo $VARS->get('i_lat')+blurred($VARS->get('i_u_fk'));?>).transform( fromProjection, toProjection);
+				var zoom           = <?php echo blurredZoom($VARS->get('i_u_fk')); ?>; 
 			 
 				map.addLayer(mapnik);
 				map.setCenter(position, zoom);
 				
-				<?php if(me()==$VARS->get('i_u_fk')) { ?>
+				<?php if($VARS->get('i_set')!=0) { ?>
+					var markers = new OpenLayers.Layer.Markers( "Markers" );
+					map.addLayer(markers);
+					var size = new OpenLayers.Size(21,25);
+					var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+					var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
+					<?php foreach($VARS->get('setimages') as $key => $img) {
+						if($img->get('i_lng')==0) continue;
+						?>
+						markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $img->get('i_lng')+blurred($VARS->get('i_u_fk'));?>,<?php echo $img->get('i_lat')+blurred($VARS->get('i_u_fk'));?>).transform( fromProjection, toProjection),icon.clone()));
+					<?php } ?>
+					var bounds = markers.getDataExtent();
+					map.zoomToExtent(bounds);
+				<?php } else if(me()>0) { ?>
 					var markers = new OpenLayers.Layer.Markers( "Markers" );
 					map.addLayer(markers);
 					
 					var size = new OpenLayers.Size(21,25);
 					var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 					var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
-					markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $VARS->get('i_lng');?>,<?php echo $VARS->get('i_lat');?>).transform( fromProjection, toProjection),icon));
+					markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $VARS->get('i_lng')+blurred($VARS->get('i_u_fk'));?>,<?php echo $VARS->get('i_lat')+blurred($VARS->get('i_u_fk'));?>).transform( fromProjection, toProjection),icon));
 				<?php } ?>
 		      }
 		      
