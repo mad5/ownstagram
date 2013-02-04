@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $VARS->get('detailtitle'); ?>OwnStaGram</title>
+	<title><?php echo $VARS->get('detailtitle'); ?><?php echo siteName; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="resources/bootstrap/css/bootstrap.min<?php if($VARS->get('s_style')!='') echo ".".htmlentities($VARS->get('s_style')); ?>.css" rel="stylesheet">
 	<meta name="description" content="OwnStaGram is a free photo-sharing software which allows to upload photos from within this site and an android-app." />
 	<link rel="shortcut icon" href="favicon.ico" />
  <style type="text/css">
@@ -35,7 +35,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="index.php">OwnStaGram</a>
+          <a class="brand" href="index.php"><?php echo siteName; ?></a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
             <?php if(me()>0) { ?>

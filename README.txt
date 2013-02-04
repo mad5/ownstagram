@@ -15,3 +15,17 @@ Installation is very easy if you follow this few steps:
 
 You find the project-files at: https://sourceforge.net/projects/ownstagram/ 
 You find the android-app at: https://play.google.com/store/apps/details?id=org.apache.cordova.ownstagram
+
+
+UPDATE
+------------------------------------------------------------
+
+If you want to update to a newer version just overwrite all files find in this package.
+All database-updates will be done automatically.
+
+
+QUESTIONS or COMMENTS?
+------------------------------------------------------------
+contact me at: info@ownstagram.de
+
+

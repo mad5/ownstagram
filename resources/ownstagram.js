@@ -158,7 +158,8 @@ var ownStaGram = {
 						if(ownStaGram.type=="app") {
 							$('#screen_settings').fadeIn();
 						} else {
-							alert('sorry, wrong credentials...');
+							$('.alert').show();
+							//alert('sorry, wrong credentials...');
 						}
 					}
 				}

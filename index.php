@@ -11,6 +11,7 @@ $tpl->setVariable($settings);
 $tplContent = new template();
 $tplContent->setVariable($settings);
 
+if(isset($_GET['id'])) $_GET['id'] = str_replace("/", "", $_GET['id']);
 
 $html = '';
 if(!isset($_GET['action'])) $_GET['action'] = '';
@@ -18,26 +19,40 @@ switch($_GET['action']) {
 	case 'image' :
 			$W = (int)$_GET["w"];if($W<10) $W = 100;
 			$im = imageCreateTrueColor($W,$W);
+			
+			imagesavealpha($im, false);
+			
+			$black = imageColorAllocate ($im, 0,0,0);
+			$transparent = imagecolortransparent( $im, $black );
+			imagefilledRectangle( $im, 0, 0, imageSx($im), imageSy($im), $transparent ); 
+
 			$img = $own->findImage($_GET['img']);
 			$orig = imageCreateFromJpeg(projectPath.'/data/'.$img['i_file']);
-			
 			
 			
 			$wh = imageSx($orig);
 			if(imageSy($orig)<$wh) $wh = imageSy($orig);
 			
-			//imagecopyresampled ( resource $dst_image , resource $src_image , int $dst_x , int $dst_y , int $src_x , int $src_y , int $dst_w , int $dst_h , int $src_w , int $src_h )
-			imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $W, $wh, $wh);
+			if($img['i_set']>0 && isset($_GET['set'])) {
+				imagecopyresampled($im, $orig, 0+$W/8,0+$W/8, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W-$W/4, $W-$W/4, $wh, $wh);
+			} else {
+				imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $W, $wh, $wh);
+			}
 			
 			if((int)$img['i_rotation']!=0) $im = imagerotate($im, $img['i_rotation']*(-90), 0);
 
 			if($img['i_set']>0 && isset($_GET['set'])) {
 				$stack = imageCreateFromPng(projectPath.'/resources/stack.png');
 				imagecopyresampled($im, $stack, 0,0, 0, 0, $W, $W, imageSx($stack), imageSy($stack));
+				
 			}
-			
-			header("content-type: image/jpeg");
-			imageJpeg($im, NULL, 90);
+			if($img['i_set']>0 && isset($_GET['set'])) {
+				header("content-type: image/png");
+				imagePng($im);
+			} else {
+				header("content-type: image/jpeg");
+				imageJpeg($im, NULL, 90);
+			}
 			exit;
 			break;
 	case 'newuser':
@@ -224,7 +239,7 @@ switch($_GET['action']) {
 		$tplContent->setVariable("comments", $comments);
 		$tplContent->setVariable("id", $_GET['id']);
 		
-		$imgsrc = $own->getScaled($data['i_file'], 500,500, $data['i_rotation']);
+		$imgsrc = $own->getScaled($data['i_file'], 500,10000, $data['i_rotation'], $data['i_square']);
 		$tplContent->setVariable("imgsrc", $imgsrc);
 		
 		$groups = $own->getGroupList();

@@ -21,7 +21,14 @@
             	<br/><br/>
             	<label>title</label>
             	<input type="text" name="title" />
-            	<label class="checkbox">
+            	
+		<label>Format</label>
+		<select name="format">
+			<option value='0'>original</option>
+			<option value='1'>square</option>
+		</select>
+
+		<label class="checkbox">
             		<input type="radio" name="public" value="0" checked /> show picture if url is known<br/>
             		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-size:8pt;'>You can share the url to the image. Everyone who gets the url can see the image.</span>
             	</label>

@@ -41,6 +41,21 @@
 	<label>Subtitle</label>
 	<input type="text" class="input-block-level settingform" placeholder="describe your site" value="<?php echo $VARS->get('s_subtitle');?>" name="setting_title"><br/>
 	
+	
+	<label>Style</label>
+		<select name="setting_style" class="settingform">
+			<option value=''>default
+			
+			<?php
+			$styles = array('amelia', 'cerulean', 'cyborg', 'readable', 'simplex', 'slate', 'superhero');
+			for($i=0;$i<count($styles);$i++) {
+				echo '<option value="'.$styles[$i].'" '.($VARS->get('s_style')==$styles[$i] ? 'selected' : '').'>'.ucfirst($styles[$i]);
+			}
+			
+			?>
+		</select>
+
+	
 	<label class="checkbox">
 		<input type="checkbox" value="1" name="setting_allow_register" class="settingform" <?php echo ($VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ? 'checked' : '');?> /> Allow visitors to register
 		<br/>

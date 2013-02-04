@@ -4,7 +4,7 @@ session_start();
 include_once dirname(__FILE__).'/class.template.php';
 include_once 'inc.var.php';
 include_once dirname(__FILE__).'/class.db.php';
-
+if(!defined('siteName')) define('siteName', 'ownStaGram');
 function vd($X) {
 	echo "<pre>";
 	print_r($X);
@@ -133,7 +133,11 @@ class ownStaGram {
 			      "s_privacy" => $_POST["setting_privacy"],
 			      "s_osm" => $_POST["setting_enable_osm"],
 			      "s_homecontent" => $_POST["setting_homecontent"],
+			      "s_style" => $_POST["setting_style"],
 			      );
+		foreach($data as $key => $val) {
+			$data[$key] = stripslashes(htmlspecialchars($val));
+		}
 		#vd($S);
 		#vd($data);
 		if(isset($S['s_pk'])) {
@@ -178,11 +182,11 @@ class ownStaGram {
 			$res = array("result" => 2);
 		} else {
 	
-			$M = "You registered at ".$_SERVER['HTTP_HOST']." for an ownStaGram-account.\n";
+			$M = "You registered at ".$_SERVER['HTTP_HOST']." for an ".siteName."-account.\n";
 			$M .= "Follow this link to confirm your registration.\n\n";
 			
 			$M .= "http://".$_SERVER['HTTP_HOST'].str_replace("app.php", "index.php", $_SERVER["PHP_SELF"])."?action=confirm&id=".md5('skfbvwezguzjndcbv76qwdqwef'.$email.$pass);
-			mail($email, "ownStaGram - Registration", $M, "FROM:".ownStaGramAdmin);
+			mail($email, siteName." - Registration", $M, "FROM:".ownStaGramAdmin);
 			$res = array("result" => 1);
 		}
 		
@@ -198,10 +202,10 @@ class ownStaGram {
 			$PW = array("u_password" => md5('a4916ab01df010a042c612eb057b4ac23e79530d555354c4a92e1b24301b964f0f7ecd66143c4093ea1470efcfa33042'.$P));
 			$this->DC->update($PW, "ost_user", $user["u_pk"], "u_pk");
 			
-			$M = "You are a member at ".$_SERVER['HTTP_HOST']." with an ownStaGram-account.\n";
+			$M = "You are a member at ".$_SERVER['HTTP_HOST']." with an ".siteName."-account.\n";
 			$M .= "This is your new password: ".$P;
 			
-			mail($user["u_email"], "ownStaGram - New password", $M, "FROM:".ownStaGramAdmin);
+			mail($user["u_email"], siteName." - New password", $M, "FROM:".ownStaGramAdmin);
 			
 			
 		} else {
@@ -403,7 +407,8 @@ class ownStaGram {
 					'i_file' => $fn,
 					'i_title' => htmlspecialchars(stripslashes($T)),
 					'i_public' => (int)$_POST['public'],
-					'i_set' => $se_pk 
+					'i_set' => $se_pk,
+					'i_square' => (int)$_POST['format'],
 				);
 			$pk = $this->DC->insert($data, 'ost_images');
 			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
@@ -421,19 +426,35 @@ class ownStaGram {
 		$this->DC->sendQuery("DELETE FROM ost_images WHERE i_pk='".(int)$data['i_pk']."' ");
 	}
 	
-	public function getScaled($fn, $w, $h, $rot=0) {
+	public function getScaled($fn, $w, $h, $rot=0, $square=1) {
 		
 		if(rand(0,100)>80) $this->unlinkOld();
 		
-		$W = (int)$w;if($W<10) $W = 100;
-		$H = (int)$h;if($H<10) $H = 100;
-		$im = imageCreateTrueColor($W,$H);
 		$orig = imageCreateFromJpeg(projectPath.'/data/'.$fn);
+		$Wo = $w;
+		$f = $w/imageSx($orig);
+		$Ho = imageSy($orig)*$f;
+		
+		if($square==1) $Ho = $Wo;
+		
+		$W = (int)$Wo;if($W<10) $W = 100;
+		$H = (int)$Ho;if($H<10) $H = 100;
+		
+		
+		$im = imageCreateTrueColor($W,$H);
+		
 		
 		$wh = imageSx($orig);
-		if(imageSy($orig)<$wh) $wh = imageSy($orig);
+		$w2 = imageSx($orig);
+		$h2 = imageSy($orig);
+		
+		if($square==1) {
+			if($w2>$h2) $w2 = $h2;
+			else $h2 = $w2;
+		}
+		
 		$cn = 'data/cache/'.md5($fn.$w.$h).".jpg";
-		imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$wh/2, imageSy($orig)/2-$wh/2, $W, $H, $wh, $wh);
+		imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$w2/2, imageSy($orig)/2-$h2/2, $Wo, $Ho, $w2, $h2);
 		
 		if((int)$rot!=0) $im = imagerotate($im, $rot*(-90), 0);
 		
@@ -473,7 +494,8 @@ class ownStaGram {
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
 				'i_public' => (int)$data['public'],
 				'i_g_fk' => (int)$data['group'],
-				'i_set' => (int)$data['set']
+				'i_set' => (int)$data['set'],
+				'i_square' => (int)$data['format'],
 				);
 		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}

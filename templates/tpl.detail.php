@@ -12,11 +12,11 @@
         }
         </script>
         
-        	<?php if($VARS->get('i_u_fk')==me()) { ?>
-			  <div class="well sidebar-nav" id='links'>
-			  <a href='index.php?action=overview' onclick="return closeIframe();" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
-			  </div>
-                <?php } ?>
+        	
+		  <div class="well sidebar-nav" id='links'>
+		  <a href='index.php?action=<?php echo ($VARS->get('i_u_fk')==me() ? 'overview' : 'discover'); ?>' onclick="return closeIframe();" class="btn btn-link"><i class="icon-arrow-left"></i> close detail-view</a>
+		  </div>
+                
 
 		  <?php if($VARS->get('i_set')!=0) { ?>
 
@@ -70,6 +70,13 @@
 					<label>Title</label>
 					<input type="text" name="title" value="<?php echo $VARS->get('i_title'); ?>" placeholder="Photo title">
 
+					<label>Format</label>
+						<select name="format">
+							<option value='1' <?php if($VARS->get('i_square')==1) echo 'selected'; ?>>square</option>
+							<option value='0' <?php if($VARS->get('i_square')==0) echo 'selected'; ?>>original</option>
+						</select>
+
+						
 					<label>Visibility</label>
 						
 					<label class="checkbox">
@@ -140,7 +147,7 @@
         </div>
 
         <div class="span6">
-        <div class="hero-unit" style="padding-top:15px;">
+        <div class="hero-unit" style="padding-top:15px;padding-bottom:20px;">
 		  
 		  <div style="float:left;">
 			<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
@@ -177,17 +184,49 @@
 			  <div style='padding:20px;'>
 			  <img src='<?php echo $VARS->get('imgsrc');?>' width=500 height=500 style="border:solid 1px silver;border-radius:5px;" />
 			  </div>
-			  <div style='height:30px;padding:0 20px 20px 20px;'>
+			  <div style='height:30px;padding:0 20px 20px 20px;float:left;'>
 				  <?php if($VARS->get('i_title')!="") { ?>
 					  <b><?php echo $VARS->get('i_title');?></b><br/>
 				  <?php } ?>
 			  </div>
+			  
+			  
+			  <div style='height:30px;padding:0 20px 20px 20px;float:right;'>
+			  <a href="http://twitter.com/share?text=<?php echo urlencode( ($VARS->get('i_title')=='' ? 'my photo' : $VARS->get('i_title')).' on ownStaGram');?>&url=http://<?php echo urlencode($_SERVER["HTTP_HOST"].$_SERVER['REQUEST_URI']);?>" target="_blank"><img src='resources/twitter.png' /></a>
+ 
+			  <a href="http://www.facebook.com/sharer.php?u=http://<?php echo urlencode($_SERVER["HTTP_HOST"].$_SERVER['REQUEST_URI']);?>" target="_blank"><img src='resources/facebook.png' /></a>
+			  </div>
+			  <div style='clear:both;'></div>
+		    
 		  </div>
+		  <br/>
+				 
+		  <?php /*
+		    <i class="icon-user"></i> <a href="#"><?php echo $VARS->get('u_nickname'); ?></a>
+		    | <i class="icon-calendar"></i> <?php echo $VARS->get('i_date'); ?>
+		    | <i class="icon-comment"></i> <a href="#comments"><?php echo $VARS->get('comments')->count();?> Comments</a>
+		    <!-- | <i class="icon-share"></i> <a href="#">39 Shares</a> -->
+		    <br/>
+		    -->
+		    */?>
+		    
+		    
+		    			
+
+		    <!--
+		    <br/>
+		    Tags:
+		    <a href="#"><span class="label label-info">Snipp</span></a>
+		    <a href="#"><span class="label label-info">Bootstrap</span></a>
+		    <a href="#"><span class="label label-info">UI</span></a>
+		    <a href="#"><span class="label label-info">growth</span></a>
+		    -->
+    
           
           </div>
           
           <div class="hero-unit" style="padding-top:15px;">
-          	
+          	<a name='comments'></a>
           	<h2>Comments</h2>
           	
           	<?php foreach($VARS->get('comments') as $key => $comment) { ?>

@@ -37,6 +37,11 @@
 		
 	<?php } ?>
 	
+		
+		<div class="alert alert-error" style="display:none;">
+		<a class="close" data-dismiss="alert" href="#">×</a>Incorrect Username or Password!
+		</div>
+	
 	<input type="text" class="input-block-level" placeholder="Email address" id="login_email">
 	<input type="password" class="input-block-level" placeholder="Password" id="login_password">
 	<!--

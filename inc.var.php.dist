@@ -8,3 +8,5 @@ define('DB_CHARACTERSET', 'utf8');
 define('MailSender', 'mailSender@example.com');
 
 define('ownStaGramAdmin', 'mailSender@example.com');
+
+define('siteName', 'ownStaGram');
