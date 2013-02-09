@@ -55,7 +55,7 @@ function blurred($u_fk) {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.9.3";
+	public $VERSION = "1.9.5";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
