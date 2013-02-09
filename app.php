@@ -89,7 +89,11 @@ switch($_REQUEST['action']) {
 			$res = $own->addemailin();
 			break;
 	case 'checkemailin':
-			$res = $own->checkemailin();
+			if(isset($_REQUEST['uid'])) {
+				$res = $own->checkemailinForUser($_REQUEST['uid']);
+			} else {
+				$res = $own->checkemailin();
+			}
 			break;
 	default: 
 			$res = array("result" => 0, "error" => "API-Command unknown!");

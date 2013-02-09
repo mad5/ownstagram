@@ -79,6 +79,7 @@
 		</form>
 	</div>
 	<br/><br/>
+	Why should you send photos via email? Because then you can use every mobile app (android or iphone/ipad) which share photos via email.
 	
 </div>
 </div>

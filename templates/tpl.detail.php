@@ -75,6 +75,10 @@
 					
 					<label>Title</label>
 					<input type="text" name="title" value="<?php echo $VARS->get('i_title'); ?>" placeholder="Photo title">
+					
+					<label>Location</label>
+					<input type="text" name="location" value="<?php echo $VARS->get('i_location'); ?>" placeholder="City, Country">
+
 
 					<label>Format</label>
 						<select name="format">

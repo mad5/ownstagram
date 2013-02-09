@@ -96,8 +96,9 @@ class ownStaGram {
 		
 	}
 	
-	public function getProfile() {
-		$Q = "SELECT * FROM ost_user WHERE u_pk='".me()."' ";
+	public function getProfile($u_pk=0) {
+		if($u_pk==0) $u_pk = me();
+		$Q = "SELECT * FROM ost_user WHERE u_pk='".$u_pk."' ";
 		$P = $this->DC->getByQuery($Q);
 		return $P;
 	}
@@ -500,6 +501,7 @@ class ownStaGram {
 		
 		$new = array(
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
+				'i_location' => htmlspecialchars(stripslashes($data['location'])),
 				'i_public' => (int)$data['public'],
 				'i_g_fk' => (int)$data['group'],
 				'i_set' => (int)$data['set'],
@@ -765,9 +767,10 @@ class ownStaGram {
 		return $res;
 	}
 	
-	public function getEmailin() {
+	public function getEmailin($u_pk=0) {
+		if($u_pk==0) $u_pk = me();
 		$Q = "SELECT ei_email, ei_key FROM ost_emailin 
-			WHERE ei_u_fk='".me()."' 
+			WHERE ei_u_fk='".(int)$u_pk."' 
 			";
 		return $this->DC->getAllByQuery($Q);
 	}
@@ -778,11 +781,21 @@ class ownStaGram {
 		}
 	}
 	
-	public function checkemailin() {
-		$S = $this->getSettings();
-		$P = $this->getProfile();
+	public function checkemailinForUser($uid) {
 		
-		$EI = $this->getEmailin();
+		$Q = "SELECT * FROM ost_user WHERE md5(concat(u_pk,u_email)) = '".addslashes($uid)."' ";
+		$U = $this->DC->getByQuery($Q);
+		
+		if($U!="") {
+			$this->checkemailin($U["u_pk"]);
+		}
+	}
+	
+	public function checkemailin($u_pk=0) {
+		$S = $this->getSettings();
+		$P = $this->getProfile($u_pk);
+		
+		$EI = $this->getEmailin($u_pk);
 		
 		$count = 0;
 		
