@@ -27,7 +27,12 @@ switch($_GET['action']) {
 			imagefilledRectangle( $im, 0, 0, imageSx($im), imageSy($im), $transparent ); 
 
 			$img = $own->findImage($_GET['img']);
-			$orig = imageCreateFromJpeg(projectPath.'/data/'.$img['i_file']);
+			$ext = strtolower(substr(projectPath.'/data/'.$img['i_file'], strrpos(projectPath.'/data/'.$img['i_file'],".")));
+			if($ext==".jpg") {
+				$orig = imageCreateFromJpeg(projectPath.'/data/'.$img['i_file']);
+			} else if($ext==".png") {
+				$orig = imageCreateFromPng(projectPath.'/data/'.$img['i_file']);
+			} else die("Wrong extension.");
 			
 			
 			$wh = imageSx($orig);
@@ -185,8 +190,12 @@ switch($_GET['action']) {
 		}
 		
 		$filter = "";
-		if(isset($_GET['filter']) && $_GET['filter']=='fav') $filter = $_GET["filter"]; 
-		$list = $own->getList(me(), $filter);
+		if(isset($_GET['filter']) && $_GET['filter']=='fav') $filter = $_GET["filter"];
+		if( getS('user', 'u_remoteserver')=='') { 
+			$list = $own->getList(me(), $filter);
+		} else {
+			$list = $own->getCollected(me());
+		}
 		$tplContent->setVariable("list", $list);
 
 		$sets = $own->getSetList();
@@ -297,8 +306,18 @@ switch($_GET['action']) {
 		if(isset($_POST['send']) && $_POST['send']==1) {
 			$own->setProfile($_POST);
 		}
+		
+		if(isset($_POST['sendemailin']) && $_POST['sendemailin']==1 && isset($_POST['emailins'])) {
+			$own->updateSendmailins($_POST['emailins']);
+			
+		}
+		
 		$P = $own->getProfile();
 		$tplContent->setVariable($P);
+		
+		$EI = $own->getEmailin();
+		$tplContent->setVariable("emailin", $EI);
+		
 		$html = $tplContent->get('tpl.profile.php');
 		
 		break;

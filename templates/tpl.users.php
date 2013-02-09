@@ -17,15 +17,17 @@
 			<th>registered</th>
 			<th>confirmed</th>
 			<th style="text-align:center;">pictures</th>
+			<th>remote</th>
 			<th></th>
 		</tr>
 	<?php foreach($VARS->get('list') as $key => $user) { ?>
 		<tr>	
 		
-			<td><?php echo $user->get('u_email');?></td>
+			<td <?php if($user->get('u_remoteserver')!="") echo "style='font-weight:bold;'"; ?>><?php echo $user->get('u_email');?></td>
 			<td><?php echo $user->get('u_registered');?></td>
 			<td><?php echo ($user->get('u_confirmed')=='0000-00-00 00:00:00' ? "no" : "yes");?></td>
 			<td style="text-align:center;"><?php echo $user->get('pictures');?></td>
+			<td style='font-size:9pt;'><?php echo $user->get('u_remoteserver');?></td>
 			<td><a href='index.php?action=users&id=<?php echo $user->get('u_pk');?>' class="icon-pencil">&nbsp;</a></td>
 		</tr>
 	<?php } ?>

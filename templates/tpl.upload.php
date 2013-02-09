@@ -1,6 +1,12 @@
         <div class="span3">
+        <br>
                   <div class="well sidebar-nav">
-                  	
+                  
+                  
+                  	<a href='#' onclick="ownStaGram.checkEmailIn();return false;" class="btn btn-link"><i class="icon-refresh"></i> check email-in</a>
+                  	<div id='emailchecked' style='display:none;padding: 5px;' >
+                  	</div>
+                  
                   </div>
         </div>
 

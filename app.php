@@ -31,14 +31,12 @@ switch($_REQUEST['action']) {
 			break; 	
 	case 'login' :
 			$res = $own->login($_REQUEST['email'], $_REQUEST['password']);
-			#vd($_REQUEST);exit;
 			if($res['result']==1 && isset($_REQUEST['remotekey']) && $_REQUEST['remotekey']!='') {
 				$res = $own->loginAtRemote($_REQUEST['remotekey'], $_REQUEST['remoteserver']);
 			}
 			break; 	
 	case 'loginfromremote':
 			$data = json_decode($_REQUEST['data'], true);
-			//mail("aresch@yavari.de", "logniremote", print_r($_REQUEST,1),"FROM:aresch@yavari.de");
 			$res = array("result" => 0);
 			if(stristr($data['key'],'.') || stristr($data['key'],'/')) die('error...');
 			if(file_exists(projectPath.'/data/cache/'.$data['key'].'.rlogin')) {
@@ -46,7 +44,6 @@ switch($_REQUEST['action']) {
 				$res = array("result" => 2, "key" => $key2);
 				$fn = projectPath.'/data/cache/'.$key2.'.rlogin';
 				file_put_contents($fn, $_REQUEST['data']);
-				
 			}
 			break;
 	case 'logout' :
@@ -81,6 +78,18 @@ switch($_REQUEST['action']) {
 			$S = $own->getServerUrl();
 			$res = array("result" => 1, "key" => $key, "server" => $S );
 				
+			break;
+	case 'twitterconnect':
+			$res = $own->twitterconnect();
+			break;
+	case 'socialpost':
+			$res = $own->socialpost();
+			break;
+	case 'addemailin':
+			$res = $own->addemailin();
+			break;
+	case 'checkemailin':
+			$res = $own->checkemailin();
 			break;
 	default: 
 			$res = array("result" => 0, "error" => "API-Command unknown!");

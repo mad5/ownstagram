@@ -19,6 +19,9 @@
       #osmMap .olControlAttribution {
       	      bottom: 0;
       }
+      .form-signin div, .form-signin label, .form-signin p {
+      	       color: gray;
+      }
     </style>
     
     <link href="resources/bootstrap/css/bootstrap.responsive.min.css" rel="stylesheet">
@@ -53,7 +56,12 @@
             <ul class="nav">
               <li <?php if(!isset($_GET['action']) || $_GET['action']=='') echo 'class="active"';?>><a href="index.php">home</a></li>
               <?php if(me()>0) { ?>
-              	<li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">my photos</a></li>
+              	      
+              	      <?php if( getS('user', 'u_remoteserver')=='') { ?>
+              	      	      <li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">my photos</a></li>
+              	      <?php } else { ?>
+              	      	      <li <?php if(isset($_GET['action']) && $_GET['action']=='overview') echo 'class="active"';?>><a href="index.php?action=overview">collected photos</a></li>
+              	      <?php } ?>
               	
               	<?php if( getS('user', 'u_email')==ownStaGramAdmin || ($VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 ) ) { ?>
               		<?php if( getS('user', 'u_remoteserver')=='') { ?>

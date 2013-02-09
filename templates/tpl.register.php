@@ -36,5 +36,11 @@
 	<input type="password" class="input-block-level" placeholder="Again" id="register_again">
 	<button class="btn btn-large btn-primary" type="submit">Register</button>
 	
+	<br/><br/>
+	<span style='color: gray;'>
+	Do you have your own ownStaGram-Copy running? 
+	If so, you do not need to register. Go to <a href='index.php?action=login'>login-page</a> and login through your own server.
+	</span>
+	
         
 </form>

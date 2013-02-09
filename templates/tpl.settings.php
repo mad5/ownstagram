@@ -25,7 +25,9 @@
         height: auto;
         margin-bottom: 15px;
         padding: 7px 9px;
+        color: gray;
       }
+      
 </style>
 
 

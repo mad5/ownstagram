@@ -228,7 +228,11 @@ class ownStaGram {
 				"server" => $this->getServerUrl(),
 				"key" => $remotekey
 				);
-		$res = json_decode(file_get_contents($remoteserver.'/app.php?action=loginfromremote&data='.urlencode(json_encode($data))), true);
+		
+		$rurl = $remoteserver.'/app.php?action=loginfromremote&data='.urlencode(json_encode($data));
+		$remoteRes = file_get_contents($rurl );
+		$res = json_decode($remoteRes, true);
+		$res['remote'] = 1;
 		
 		if($res['result']==2) {
 			$R = $this->DC->getByQuery("SELECT * FROM ost_remotes WHERE r_u_fk='".$this->user['u_pk']."' AND r_server='".addslashes($remoteserver)."' ");
@@ -239,7 +243,6 @@ class ownStaGram {
 			}
 		}
 			
-		//$res = array("result" => 2);
 		return $res;
 	}
 	
@@ -279,7 +282,7 @@ class ownStaGram {
 	
 	public function login($email, $pass) {
 		$this->user = $user = $this->DC->getByQuery("SELECT * FROM ost_user WHERE u_email='".addslashes($email)."' AND u_password='".addslashes($pass)."' AND u_confirmed!='0000-00-00 00:00:00' ");
-		if($user!="") {
+		if($this->user!="") {
 			if($user['u_remoteserver']!='') $user['u_email'] .= ' @ '.$user['u_remoteserver'];
 			setS("user", $user); 
 			$res = array("result" => 1);
@@ -430,7 +433,12 @@ class ownStaGram {
 		
 		if(rand(0,100)>80) $this->unlinkOld();
 		
-		$orig = imageCreateFromJpeg(projectPath.'/data/'.$fn);
+		$ext = strtolower(substr(projectPath.'/data/'.$fn, strrpos(projectPath.'/data/'.$fn,".")));
+		if($ext==".jpg") {
+			$orig = imageCreateFromJpeg(projectPath.'/data/'.$fn);
+		} else if($ext==".png") {
+			$orig = imageCreateFromPng(projectPath.'/data/'.$fn);
+		} else die("Wrong extension.");
 		$Wo = $w;
 		$f = $w/imageSx($orig);
 		$Ho = imageSy($orig)*$f;
@@ -521,12 +529,28 @@ class ownStaGram {
 		return $this->DC->countByQuery($Q);
 	}
 	
+	public function getCollected($from) {
+		$Q = "SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images
+		INNER JOIN ost_views ON v_i_fk=i_pk 
+		WHERE v_u_fk='".(int)$from."' ";
+		$Q .= " ORDER BY i_date DESC ";
+		
+		$data = $this->DC->getAllByQuery($Q);
+		$data = $this->fillExtraData($data);
+		return $data;
+	}
+	
 	public function getList($from, $filter='') {
 		$Q = "SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".(int)$from."' ";
 		if($filter=="fav") $Q .= " AND i_star=1 ";
 		$Q .= " ORDER BY i_date DESC ";
 		
 		$data = $this->DC->getAllByQuery($Q);
+		$data = $this->fillExtraData($data);
+		return $data;
+	}
+	
+	private function fillExtraData($data) {
 		for($i=0;$i<count($data);$i++) {
 			$data[$i]["views"] = $this->DC->countByQuery("SELECT count(*) FROM ost_views WHERE v_i_fk='".(int)$data[$i]["i_pk"]."'  ");
 			$data[$i]["comments"] = $this->DC->countByQuery("SELECT count(*) FROM ost_comments WHERE co_i_fk='".(int)$data[$i]["i_pk"]."'  ");
@@ -690,6 +714,110 @@ class ownStaGram {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;
 		$I = $this->DC->getAllByQuery($Q);
 		return $I;
+	}
+	
+	public function twitterconnect() {
+		$S = $this->getSettings();
+		$P = $this->getProfile();
+		$res = array("result" => 0);
+		
+		$url = "http://www.ownstagram.de/twitter/connect.php?instance=".$S["s_instance"]."&uid=".md5($P['u_pk'].$P['u_email'])."&site=".urlencode($this->getServerUrl());
+		$res = json_decode(file_get_contents($url), true);
+		
+		
+		return $res;
+	}
+	
+	public function socialpost() {
+		$S = $this->getSettings();
+		$P = $this->getProfile();
+		if($_POST['type']=="twitter") {
+			$url = "http://www.ownstagram.de/twitter/connect.php?";
+			$url .= "instance=".$S["s_instance"]."&";
+			$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
+			$url .= "pid=".urlencode($_POST['id'])."&";
+			$url .= "src=".urlencode($_POST['src'])."&";
+			$url .= "title=".urlencode($_POST['title']);
+			$res = json_decode(file_get_contents($url), true);
+		}
+		return $res;
+	}
+	public function addemailin() {
+		if(trim($_POST['email'])=="") {
+			return array("result" => 0);
+		}
+		$S = $this->getSettings();
+		$P = $this->getProfile();
+		$url = "http://www.ownstagram.de/emailin/index.php?";
+		$url .= "action=add&";
+		$url .= "instance=".$S["s_instance"]."&";
+		$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
+		$url .= "site=".urlencode($this->getServerUrl())."&";
+		$url .= "email=".urlencode($_POST['email']);
+		
+		$res = json_decode(file_get_contents($url), true);
+		
+		$EI = array("ei_u_fk" => me(),
+				"ei_email" => stripslashes($_POST['email']),
+			);
+		$this->DC->insert($EI, "ost_emailin");
+		$res["ei"] =  $this->getEmailin();
+		return $res;
+	}
+	
+	public function getEmailin() {
+		$Q = "SELECT ei_email, ei_key FROM ost_emailin 
+			WHERE ei_u_fk='".me()."' 
+			";
+		return $this->DC->getAllByQuery($Q);
+	}
+	
+	public function updateSendmailins($S) {
+		foreach($S as $email => $key) {
+			$this->DC->sendQuery("UPDATE ost_emailin SET ei_key='".addslashes($key)."' WHERE ei_u_fk='".me()."' AND ei_email='".addslashes($email)."' ");
+		}
+	}
+	
+	public function checkemailin() {
+		$S = $this->getSettings();
+		$P = $this->getProfile();
+		
+		$EI = $this->getEmailin();
+		
+		$count = 0;
+		
+		for($i=0;$i<count($EI);$i++) {
+			$url = "http://www.ownstagram.de/emailin/index.php?";
+			$url .= "action=get&";
+			$url .= "instance=".$S["s_instance"]."&";
+			$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
+			$url .= "site=".urlencode($this->getServerUrl())."&";
+			$url .= "email=".urlencode($EI[$i]['ei_email'])."&";
+			$url .= "key=".urlencode($EI[$i]['ei_key']);
+			
+			$res = json_decode(file_get_contents($url), true);
+			if($res['result']==1) {
+				for($j=0;$j<count($res["EI"]);$j++) {
+					$img = file_get_contents("http://www.ownstagram.de/emailin/index.php?dl=".$res['EI'][$j]['EIKEY']);
+					$fn = $P['u_pk'].'/'.date('Ymd').'/'.microtime(true).".".$res["EI"][$j]['extension'];
+					
+					file_put_contents(dirname('__FILE__').'/data/'.$fn, $img);
+					
+					$data = array("i_u_fk" => $P['u_pk'],
+							"i_date" => $res["EI"][$j]["imagedate"],
+							"i_file" => $fn,
+							"i_title" => $res["EI"][$j]["title"],
+							"i_key" => md5(uniqid(microtime(true).rand())),
+							"i_square" => 0
+						);
+					$this->DC->insert($data, "ost_images");
+					$count++;
+				}
+			}
+		}
+		$res = array("result" => 1, "count" => $count);
+		return $res;
+		
 	}
 	
 }

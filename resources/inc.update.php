@@ -37,6 +37,7 @@ $UPDATE_SQL[22] = array('type' => 'newfield', 'table' => 'ost_images', 'field' =
 $UPDATE_SQL[23] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_homecontent', 'query' => array('ALTER TABLE `ost_settings` ADD `s_homecontent` TINYINT NOT NULL DEFAULT 1 '));
 $UPDATE_SQL[24] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_style', 'query' => array('ALTER TABLE `ost_settings` ADD `s_style` varchar(255) NOT NULL '));
 $UPDATE_SQL[25] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_square', 'query' => 'ALTER TABLE `ost_images` ADD `i_square` TINYINT NOT NULL DEFAULT 1 ');
+$UPDATE_SQL[26] = array('type' => 'newtable', 'table' => 'ost_emailin', 'query' => 'CREATE TABLE `ost_emailin` (`ei_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`ei_u_fk` BIGINT NOT NULL ,`ei_email` VARCHAR( 255 ) NOT NULL ,`ei_key` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

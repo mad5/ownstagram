@@ -40,9 +40,15 @@
                 
                   <div class="well sidebar-nav" id='links'>
                   
-                  	<a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('hide=1&', '');H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a> 
+                  	<a href='#' id='maillink' onclick="var H = window.location+'';H=H.replace('hide=1&', '');H=H.replace('&','%26');window.location='mailto:?subject=take%20a%20look&body=see this picture:%0a'+H+'%0a%0a';return false;" class="btn btn-link"><i class="icon-envelope"></i> send this image via email</a><br/> 
                   	
                   </div>
+                  
+                  <?php /*
+                  <div class="well sidebar-nav" id='links'>
+                  	<a href='#' id='maillink' onclick="ownStaGram.socialpost('twitter', '<?php echo $VARS->get("id");?>', '<?php echo $VARS->get('imgsrc');?>', '<?php echo $VARS->get('i_title');?>');return false;" class="btn btn-link"><img src='resources/twitter_bird.png' style="height:22px;" /> post on twitter</a> 
+                  </div>
+                  */ ?>
                 
                   <?php if($VARS->get('i_u_fk')!=me() && 1==2) { ?>
                   	  

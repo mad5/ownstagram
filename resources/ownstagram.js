@@ -252,6 +252,69 @@ var ownStaGram = {
 		
 	},
 	
+	'connectTwitter': function() {
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": { 'action': 'twitterconnect' },
+				"dataType": "json",
+				"success": function(data) {
+					if(data.result!=1) {
+						alert("Error connecting to twitter.");
+						
+					} else {
+						if(typeof(data.id)!="undefined" && data.id!="") {
+							window.location = 'http://www.ownstagram.de/twitter/connect.php?instance='+data.instance+'&id='+data.id;
+						}
+					}
+				}
+		});
+	},
+	
+	'socialpost': function(type, id, src, title) {
+		$.ajax({
+				"url": this.url,
+				"type": "POST",
+				"data": { 'action': 'socialpost', 'type':  type, 'id': id, 'src': src, 'title': title },
+				"dataType": "json",
+				"success": function(data) {
+					if(data.result!=1) {
+						alert("posted onto your twitter-stream...");
+					}
+				}
+		});
+	},
+	
+	'addEmailinSender': function(email) {
+		$.ajax({
+				'url': this.url,
+				'data': {'action': 'addemailin', 'email': email},
+				'type': 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					if(data.result==1) {
+						alert("Please check your email.\n");
+						window.location = 'index.php?action=profile';
+					}
+				}
+		});
+	},
+	
+	'checkEmailIn': function() {
+		$.ajax({
+				'url': this.url,
+				'data': {'action': 'checkemailin'},
+				'type': 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					if(data.result==1) {
+						$('#emailchecked').html( data.count+" photos found in inbox." );
+						$('#emailchecked').slideDown();
+					}
+				}
+		});
+	},
+	
 	"error": function(msg) {
 		alert(msg);
 		return false;
