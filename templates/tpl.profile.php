@@ -74,6 +74,7 @@
 			<?php foreach($VARS->get('emailin') as $key => $EI) { ?>
 				<b><?php echo $EI->get('ei_email');?></b><br/>
 				key:<input type='text' value='<?php echo $EI->get('ei_key');?>' name='emailins[<?php echo $EI->get('ei_email');?>]' style='font-size:10px;font-family: arial;' />
+				<a href='#' onclick="if(confirm('really?')) { ownStaGram.removeEIkey('<?php echo $EI->get('ei_email');?>'); } return false;">[x]</a>
 			<?php } ?>
 			<input type='submit' value='save keys' class="btn btn-large btn-primary">
 		</form>

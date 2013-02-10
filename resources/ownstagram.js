@@ -315,6 +315,20 @@ var ownStaGram = {
 		});
 	},
 	
+	'removeEIkey': function(email) {
+		$.ajax({
+				'url': this.url,
+				'data': {'action': 'removeEIkey', 'email': email},
+				'type': 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					if(data.result==1) {
+						window.location = 'index.php?action=profile';
+					}
+				}
+		});
+	},
+	
 	"error": function(msg) {
 		alert(msg);
 		return false;

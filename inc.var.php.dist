@@ -10,3 +10,5 @@ define('MailSender', 'mailSender@example.com');
 define('ownStaGramAdmin', 'mailSender@example.com');
 
 define('siteName', 'ownStaGram');
+
+define('mytimezone', "Europe/Berlin");

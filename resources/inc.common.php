@@ -5,6 +5,10 @@ include_once dirname(__FILE__).'/class.template.php';
 include_once 'inc.var.php';
 include_once dirname(__FILE__).'/class.db.php';
 if(!defined('siteName')) define('siteName', 'ownStaGram');
+if(!defined('mytimezone')) define('mytimezone', "Europe/Berlin");
+
+date_default_timezone_set(mytimezone);
+
 function vd($X) {
 	echo "<pre>";
 	print_r($X);
@@ -811,10 +815,19 @@ class ownStaGram {
 			$res = json_decode(file_get_contents($url), true);
 			if($res['result']==1) {
 				for($j=0;$j<count($res["EI"]);$j++) {
+					
+					#error_reporting(-1);
 					$img = file_get_contents("http://www.ownstagram.de/emailin/index.php?dl=".$res['EI'][$j]['EIKEY']);
+					
 					$fn = $P['u_pk'].'/'.date('Ymd').'/'.microtime(true).".".$res["EI"][$j]['extension'];
 					
-					file_put_contents(dirname('__FILE__').'/data/'.$fn, $img);
+					$path = projectPath.'/data/'.$P['u_pk'].'/'.date('Ymd');
+					if(!file_exists($path)) {
+						mkdir($path, 0777, true);
+						chmod($path, 0777);
+					}
+					
+					file_put_contents(projectPath.'/data/'.$fn, $img);
 					
 					$data = array("i_u_fk" => $P['u_pk'],
 							"i_date" => $res["EI"][$j]["imagedate"],
@@ -831,6 +844,15 @@ class ownStaGram {
 		$res = array("result" => 1, "count" => $count);
 		return $res;
 		
+	}
+	
+	public function removeEIkey($email) {
+		
+		$Q = "UPDATE ost_emailin set ei_u_fk=-ei_u_fk WHERE ei_u_fk='".me()."' AND ei_email='".addslashes($email)."' ";
+		$this->DC->sendQuery($Q);
+		
+		$res = array("result" => 1);
+		return $res;
 	}
 	
 }

@@ -1,7 +1,8 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 define('projectPath', dirname(__FILE__));
-error_reporting(-1);ini_set('display_errors', 'on');
+#error_reporting(-1);ini_set('display_errors', 'on');
+error_reporting(0);ini_set('display_errors', 'off');
 
 include_once 'resources/inc.common.php';
 $settings = $own->getSettings();
@@ -94,6 +95,9 @@ switch($_REQUEST['action']) {
 			} else {
 				$res = $own->checkemailin();
 			}
+			break;
+	case 'removeEIkey':
+			$res = $own->removeEIkey($_POST['email']);
 			break;
 	default: 
 			$res = array("result" => 0, "error" => "API-Command unknown!");
