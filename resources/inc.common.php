@@ -913,6 +913,46 @@ class ownStaGram {
 		return $res;
 	}
 	
+	public function updateGlobal() {
+		$S = $this->getSettings();
+		if($S["s_global"]==1) {
+			
+			$this->DC->sendQuery("UPDATE ost_settings SET s_global_lastcheck=now()");
+			
+			$last = $this->DC->getByQuery("SELECT * FROM ost_global ORDER BY gl_changed DESC LIMIT 1", "gl_changed");
+			
+			$res = file_get_contents("http://www.ow"."nst"."ag"."ram.de/global/index.php?action=getGlobal&instance=".urlencode($S["s_instance"]).'&last='.urlencode($last));
+			
+			$res = json_decode($res, true);
+			if($res['result']==1) {
+				$G = $res['globals'];
+				for($i=0;$i<count($G);$i++) {
+					$Q = "SELECT * FROM ost_global WHERE gl_host='".addslashes($G[$i]["g_host"])."' ";
+					$Gx = $this->DC->getByQuery($Q);
+					
+					$data = array("gl_host" => $G[$i]["g_host"],
+						      "gl_changed" => $G[$i]["g_changed"],
+						      );
+					
+					if($Gx=="") {
+						if($G[$i]["g_deleted"]=='0000-00-00 00:00:00') {
+							$this->DC->insert($data, "ost_global");
+						}
+					} else {
+						if($G[$i]["g_deleted"]=='0000-00-00 00:00:00') {
+							$this->DC->update($data, "ost_global", $Gx["gl_pk"], "gl_pk");
+						} else {
+							$this->DC->sendQuery("DELETE FROM ost_global WHERE gl_pk='".(int)$Gx["gl_pk"]."' ");
+						}
+					}
+				}
+					
+			}
+		}
+		$res = array("result" => 1);
+		return $res;
+		
+	}
 }
 
 $own = new ownStaGram();

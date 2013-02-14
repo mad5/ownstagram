@@ -99,6 +99,9 @@ switch($_REQUEST['action']) {
 	case 'removeEIkey':
 			$res = $own->removeEIkey($_POST['email']);
 			break;
+	case 'updateGlobal':
+			$res = $own->updateGlobal();
+			break;
 	default: 
 			$res = array("result" => 0, "error" => "API-Command unknown!");
 }

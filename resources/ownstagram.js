@@ -329,6 +329,20 @@ var ownStaGram = {
 		});
 	},
 	
+	'updateGlobal': function() {
+		$.ajax({
+				'url': this.url,
+				'data': {'action': 'updateGlobal'},
+				'type': 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					if(data.result==1) {
+						
+					}
+				}
+		});
+	},
+	
 	"error": function(msg) {
 		alert(msg);
 		return false;

@@ -38,8 +38,9 @@ $UPDATE_SQL[23] = array('type' => 'newfield', 'table' => 'ost_settings', 'field'
 $UPDATE_SQL[24] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_style', 'query' => array('ALTER TABLE `ost_settings` ADD `s_style` varchar(255) NOT NULL '));
 $UPDATE_SQL[25] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_square', 'query' => 'ALTER TABLE `ost_images` ADD `i_square` TINYINT NOT NULL DEFAULT 1 ');
 $UPDATE_SQL[26] = array('type' => 'newtable', 'table' => 'ost_emailin', 'query' => 'CREATE TABLE `ost_emailin` (`ei_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`ei_u_fk` BIGINT NOT NULL ,`ei_email` VARCHAR( 255 ) NOT NULL ,`ei_key` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
-$UPDATE_SQL[27] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_global', 'query' => array('ALTER TABLE `ost_settings` ADD `s_global` TINYINT NOT NULL DEFAULT 0 '));
+$UPDATE_SQL[27] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_global', 'query' => array('ALTER TABLE `ost_settings` ADD `s_global` TINYINT NOT NULL DEFAULT 0 ','ALTER TABLE `ost_settings` ADD `s_global_lastcheck` DATETIME NOT NULL '));
 $UPDATE_SQL[28] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_watermark', 'query' => array('ALTER TABLE `ost_settings` ADD `s_watermark` varchar(50) NOT NULL '));
+$UPDATE_SQL[29] = array('type' => 'newtable', 'table' => 'ost_global', 'query' => 'CREATE TABLE `ost_global` (`gl_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`gl_changed` DATETIME NOT NULL ,`gl_host` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

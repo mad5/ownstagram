@@ -183,6 +183,9 @@ $(function() {
             $(".multipleFileLabel").show();
             $(".singleFileLabel").hide();
   }
+  <?php if($VARS->get('s_global_lastcheck')<date("Y-m-d H:i:s", time()-60*60)) { ?>
+  	  setTimeout(function() { ownStaGram.updateGlobal(); }, 5000);
+  <?php } ?>
 });
 </script>
 
