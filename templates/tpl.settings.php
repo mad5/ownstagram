@@ -31,8 +31,15 @@
 </style>
 
 
-<form onsubmit="ownStaGram.saveSettings(this);return false;">
-<div class="span3">
+<form onsubmit="ownStaGram.saveSettings(this);return false;" style="margin:0;">
+
+<div class="span12">
+	<button class="btn btn-large btn-primary" type="submit">Save settings</button>
+</div>
+<div style='clear:both;'></div>
+<br/>
+
+<div class="span3" style='margin-left:0;'>
 
 	<div class="form-signin">
 	<h2 class="form-signin-heading">settings</h2>
@@ -43,20 +50,9 @@
 	<label>Subtitle</label>
 	<input type="text" class="input-block-level settingform" placeholder="describe your site" value="<?php echo $VARS->get('s_subtitle');?>" name="setting_title"><br/>
 	
+	<label>Watermark</label>
+	<input type="text" class="input-block-level settingform" placeholder="no watermark set" value="<?php echo $VARS->get('s_watermark');?>" name="setting_watermark"><br/>
 	
-	<label>Style</label>
-		<select name="setting_style" class="settingform">
-			<option value=''>default
-			
-			<?php
-			$styles = array('amelia', 'cerulean', 'cyborg', 'readable', 'simplex', 'slate', 'superhero');
-			for($i=0;$i<count($styles);$i++) {
-				echo '<option value="'.$styles[$i].'" '.($VARS->get('s_style')==$styles[$i] ? 'selected' : '').'>'.ucfirst($styles[$i]);
-			}
-			
-			?>
-		</select>
-
 	
 	<label class="checkbox">
 		<input type="checkbox" value="1" name="setting_allow_register" class="settingform" <?php echo ($VARS->is_set('s_allowregistration') && $VARS->get('s_allowregistration')==1 ? 'checked' : '');?> /> Allow visitors to register
@@ -83,16 +79,6 @@
 		Display geoposition along with your images 
 		</div>
 	</label>
-	<br/>
-	<label class="checkbox">
-		<input type="checkbox" value="1" name="setting_homecontent" class="settingform" <?php echo ($VARS->is_set('s_homecontent') && $VARS->get('s_homecontent')==1 ? 'checked' : '');?> /> show default homepage-content
-		<br/>
-		<div style="font-size:8pt;">
-		You can hide the default home-content.<br/>
-		If you want to create your own home-content, you can rename or copy the file named 'tpl.home_my.php.dist' inside templates-folder to 'tpl.home_my.php' and set your own content.<br/>
-		If you update to a new version of ownStaGram this file will not be touched.
-		</div>
-	</label>
 	
 	</div>
 
@@ -107,19 +93,51 @@
 		
 		<label>Privacy-policy</label>
 		<textarea class="settingform" rows=5 placeholder="insert your privacy-policy here" name="setting_privacy"><?php echo $VARS->get('s_privacy');?></textarea><br/>
+	
+			<label>Style</label>
+		<select name="setting_style" class="settingform">
+			<option value=''>default
+			
+			<?php
+			$styles = array('amelia', 'cerulean', 'cyborg', 'readable', 'simplex', 'slate', 'superhero');
+			for($i=0;$i<count($styles);$i++) {
+				echo '<option value="'.$styles[$i].'" '.($VARS->get('s_style')==$styles[$i] ? 'selected' : '').'>'.ucfirst($styles[$i]);
+			}
+			
+			?>
+		</select>
+
+		<br/>
+	<label class="checkbox">
+		<input type="checkbox" value="1" name="setting_homecontent" class="settingform" <?php echo ($VARS->is_set('s_homecontent') && $VARS->get('s_homecontent')==1 ? 'checked' : '');?> /> show default homepage-content
+		<br/>
+		<div style="font-size:8pt;">
+		You can hide the default home-content.<br/>
+		If you want to create your own home-content, you can rename or copy the file named 'tpl.home_my.php.dist' inside templates-folder to 'tpl.home_my.php' and set your own content.<br/>
+		If you update to a new version of ownStaGram this file will not be touched.
+		</div>
+	</label>
 		
 	</div>
 </div>
 
 <div class="span3">
-<!--
+
 	<div class="form-signin">
-		<h2 class="form-signin-heading">distribution</h2>
+		<h2 class="form-signin-heading">global</h2>
 		<p>
-			
+			all ownStaGram-instances can be connected together. 
+			You can be part of the global community to share your photos with others and explore photos from around the world.
+			The overarching goal is still to protect your photos from being used without your knowledge and permission.
+			<br/>
+			<b>If you want to connect your ownStaGram-host with others activate the following checkbox:</b><br/>
+			<br/>
+			<input type='checkbox' value="1" name="setting_global_active" class="settingform" <?php echo ($VARS->is_set('s_global') && $VARS->get('s_global')==1 ? 'checked' : '');?> /> connect my host with all others
+			<br/><br/>
+			It might be a good idea to set a watermark which will be provided with every picture shown in a public environment.
 		</p>
 	</div>
--->	
+	
 </div>
 
 <div class="span3">

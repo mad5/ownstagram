@@ -1,7 +1,7 @@
 <?php
 define('projectPath', dirname(__FILE__));
 #error_reporting(-1);ini_set('display_errors', 'on');
-error_reporting(0);ini_set('display_errors', 'off');
+error_reporting(-1);ini_set('display_errors', 'on');
 include_once 'resources/inc.common.php';
 
 $settings = $own->getSettings();
@@ -29,11 +29,11 @@ switch($_GET['action']) {
 
 			$img = $own->findImage($_GET['img']);
 			$ext = strtolower(substr(projectPath.'/data/'.$img['i_file'], strrpos(projectPath.'/data/'.$img['i_file'],".")));
-			if($ext==".jpg") {
-				$orig = imageCreateFromJpeg(projectPath.'/data/'.$img['i_file']);
-			} else if($ext==".png") {
+			if($ext==".jpg" || $ext==".png") {
+				$orig = imageCreateFromString(file_get_contents(projectPath.'/data/'.$img['i_file']));
+			/*} else if($ext==".png") {
 				$orig = imageCreateFromPng(projectPath.'/data/'.$img['i_file']);
-			} else die("Wrong extension.");
+			*/} else die("Wrong extension.");
 			
 			
 			$wh = imageSx($orig);
@@ -50,8 +50,10 @@ switch($_GET['action']) {
 			if($img['i_set']>0 && isset($_GET['set'])) {
 				$stack = imageCreateFromPng(projectPath.'/resources/stack.png');
 				imagecopyresampled($im, $stack, 0,0, 0, 0, $W, $W, imageSx($stack), imageSy($stack));
-				
 			}
+			
+			if(me()!=$img['i_u_fk']) $own->addWatermark($im);
+			
 			if($img['i_set']>0 && isset($_GET['set'])) {
 				header("content-type: image/png");
 				imagePng($im);
@@ -61,7 +63,6 @@ switch($_GET['action']) {
 			}
 			exit;
 			break;
-	case 'newuser':
 		if(me()<=0 || getS('user', 'u_email')!=ownStaGramAdmin) jump2();
 		if(isset($_POST["saveuser"]) && $_POST["saveuser"]==1) {
 			$own->setUserData(-1, $_POST['FORM']);
@@ -249,7 +250,9 @@ switch($_GET['action']) {
 		$tplContent->setVariable("comments", $comments);
 		$tplContent->setVariable("id", $_GET['id']);
 		
-		$imgsrc = $own->getScaled($data['i_file'], 500,10000, $data['i_rotation'], $data['i_square']);
+		$watermark = ($data['i_u_fk']!=me());
+		if($data['i_public']==0 && me()>0) $watermark = false; 
+		$imgsrc = $own->getScaled($data['i_file'], 500,10000, $data['i_rotation'], $data['i_square'], $watermark  );
 		$tplContent->setVariable("imgsrc", $imgsrc);
 		
 		$groups = $own->getGroupList();

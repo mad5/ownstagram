@@ -59,7 +59,7 @@ function blurred($u_fk) {
 
 class ownStaGram {
 	public $DC;
-	public $VERSION = "1.9.5";
+	public $VERSION = "1.9.6";
 	public function __construct() {
 		$this->DC = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARACTERSET);
 		if($this->DC->res!=1) {
@@ -125,6 +125,7 @@ class ownStaGram {
 			$this->DC->insert($S, "ost_settings");
 			
 		}
+		$this->settings = $S;
 		return $S;
 	}
 	
@@ -139,6 +140,8 @@ class ownStaGram {
 			      "s_osm" => $_POST["setting_enable_osm"],
 			      "s_homecontent" => $_POST["setting_homecontent"],
 			      "s_style" => $_POST["setting_style"],
+			      "s_global" => (int)$_POST["setting_global_active"],
+			      "s_watermark" => $_POST["setting_watermark"]
 			      );
 		foreach($data as $key => $val) {
 			$data[$key] = stripslashes(htmlspecialchars($val));
@@ -150,6 +153,11 @@ class ownStaGram {
 		} else {
 			$this->DC->insert($data, 'ost_settings');
 		}
+		
+		if((int)$_POST["setting_global_active"]!=$S['s_global']) {
+			file_get_contents("http://www.ow"."nst"."ag"."ram.de/global/index.php?action=setGlobal&instance=".urlencode($S["s_instance"])."&host=".urlencode($this->getServerUrl())."&global=".(int)$_POST["setting_global_active"]);
+		}
+		
 		$res = array("result" => 1);
 		return $res;
 	}
@@ -434,16 +442,17 @@ class ownStaGram {
 		$this->DC->sendQuery("DELETE FROM ost_images WHERE i_pk='".(int)$data['i_pk']."' ");
 	}
 	
-	public function getScaled($fn, $w, $h, $rot=0, $square=1) {
+	public function getScaled($fn, $w, $h, $rot=0, $square=1, $watermark=true) {
 		
 		if(rand(0,100)>80) $this->unlinkOld();
 		
 		$ext = strtolower(substr(projectPath.'/data/'.$fn, strrpos(projectPath.'/data/'.$fn,".")));
-		if($ext==".jpg") {
-			$orig = imageCreateFromJpeg(projectPath.'/data/'.$fn);
-		} else if($ext==".png") {
+		if($ext==".jpg" || $ext==".png") {
+			$orig = imageCreateFromString(file_get_contents(projectPath.'/data/'.$fn));
+		/*} else if($ext==".png") {
 			$orig = imageCreateFromPng(projectPath.'/data/'.$fn);
-		} else die("Wrong extension.");
+		*/ } else die("Wrong extension.");
+		
 		$Wo = $w;
 		$f = $w/imageSx($orig);
 		$Ho = imageSy($orig)*$f;
@@ -455,6 +464,7 @@ class ownStaGram {
 		
 		
 		$im = imageCreateTrueColor($W,$H);
+		
 		
 		
 		$wh = imageSx($orig);
@@ -470,11 +480,59 @@ class ownStaGram {
 		imagecopyresampled($im, $orig, 0,0, imageSx($orig)/2-$w2/2, imageSy($orig)/2-$h2/2, $Wo, $Ho, $w2, $h2);
 		
 		if((int)$rot!=0) $im = imagerotate($im, $rot*(-90), 0);
+
+		if($watermark) $this->addWatermark($im);
 		
 		imageJpeg($im, projectPath.'/'.$cn, 90);
 		return $cn;
 		
 	}
+	
+	public function addWatermark(&$im) {
+		
+		if(trim($this->settings['s_watermark'])=="") return;
+		
+		$size = 5;
+		do {
+			$size+=2;
+			$bbox = $this->imagettfbbox_fixed($size, 0, projectPath.'/resources/KunKhmer.ttf', $this->settings['s_watermark']);
+			$w = $bbox[4]-$bbox[0];
+			$h = $bbox[5]-$bbox[1];
+		} while($w<imageSx($im)*0.9 && $size<100);
+		
+		$color = "CCCCCC";
+		$opacity = 30;
+		$alpha_color = imagecolorallocatealpha(
+			      $im,
+			      hexdec( substr( $color, 0, 2 ) ),
+			      hexdec( substr( $color, 2, 2 ) ),
+			      hexdec( substr( $color, 4, 2 ) ),
+			      127 * ( 100 - $opacity ) / 100
+			    );
+		imagettftext( $im, $size, 0, imageSx($im)/2-$w/2,imageSy($im)/2-$h/2, $alpha_color, projectPath.'/resources/KunKhmer.ttf', $this->settings['s_watermark'] );
+		imageLine($im, 0,0, imageSx($im), imageSy($im), $alpha_color);
+		imageLine($im, imageSx($im),0, 0,imageSy($im), $alpha_color);
+		
+		imageLine($im, 0,0, imageSx($im), imageSy($im)/2, $alpha_color);
+		imageLine($im, 0,0, imageSx($im)/2, imageSy($im), $alpha_color);
+	}
+	
+	private function imagettfbbox_fixed( $size, $rotation, $font, $text )
+	  {
+	    $bb = imagettfbbox( $size, 0, $font, $text );
+	    $aa = deg2rad( $rotation );
+	    $cc = cos( $aa );
+	    $ss = sin( $aa );
+	    $rr = array( );
+	    for( $i = 0; $i < 7; $i += 2 )
+	    {
+	      $rr[ $i + 0 ] = round( $bb[ $i + 0 ] * $cc + $bb[ $i + 1 ] * $ss );
+	      $rr[ $i + 1 ] = round( $bb[ $i + 1 ] * $cc - $bb[ $i + 0 ] * $ss );
+	    }
+	    return $rr;
+	  }	
+	
+	
 	public function unlinkOld() {
 		$G = glob(projectPath.'/data/cache/*.jpg');
 		for($i=0;$i<count($G);$i++) {
@@ -727,7 +785,7 @@ class ownStaGram {
 		$P = $this->getProfile();
 		$res = array("result" => 0);
 		
-		$url = "http://www.ownstagram.de/twitter/connect.php?instance=".$S["s_instance"]."&uid=".md5($P['u_pk'].$P['u_email'])."&site=".urlencode($this->getServerUrl());
+		$url = "http://www.ow"."nst"."ag"."ram.de/twitter/connect.php?instance=".$S["s_instance"]."&uid=".md5($P['u_pk'].$P['u_email'])."&site=".urlencode($this->getServerUrl());
 		$res = json_decode(file_get_contents($url), true);
 		
 		
@@ -738,7 +796,7 @@ class ownStaGram {
 		$S = $this->getSettings();
 		$P = $this->getProfile();
 		if($_POST['type']=="twitter") {
-			$url = "http://www.ownstagram.de/twitter/connect.php?";
+			$url = "http://www.ow"."nst"."ag"."ram.de/twitter/connect.php?";
 			$url .= "instance=".$S["s_instance"]."&";
 			$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
 			$url .= "pid=".urlencode($_POST['id'])."&";
@@ -754,7 +812,7 @@ class ownStaGram {
 		}
 		$S = $this->getSettings();
 		$P = $this->getProfile();
-		$url = "http://www.ownstagram.de/emailin/index.php?";
+		$url = "http://www.ow"."nst"."ag"."ram.de/emailin/index.php?";
 		$url .= "action=add&";
 		$url .= "instance=".$S["s_instance"]."&";
 		$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
@@ -804,7 +862,7 @@ class ownStaGram {
 		$count = 0;
 		
 		for($i=0;$i<count($EI);$i++) {
-			$url = "http://www.ownstagram.de/emailin/index.php?";
+			$url = "http://www.ow"."nst"."ag"."ram.de/emailin/index.php?";
 			$url .= "action=get&";
 			$url .= "instance=".$S["s_instance"]."&";
 			$url .= "uid=".md5($P['u_pk'].$P['u_email'])."&";
@@ -817,7 +875,7 @@ class ownStaGram {
 				for($j=0;$j<count($res["EI"]);$j++) {
 					
 					#error_reporting(-1);
-					$img = file_get_contents("http://www.ownstagram.de/emailin/index.php?dl=".$res['EI'][$j]['EIKEY']);
+					$img = file_get_contents("http://www.ow"."nst"."ag"."ram.de/emailin/index.php?dl=".$res['EI'][$j]['EIKEY']);
 					
 					$fn = $P['u_pk'].'/'.date('Ymd').'/'.microtime(true).".".$res["EI"][$j]['extension'];
 					
