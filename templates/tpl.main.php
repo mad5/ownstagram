@@ -22,6 +22,20 @@
       .form-signin div, .form-signin label, .form-signin p {
       	       color: gray;
       }
+      .otitle {
+      	      /*
+      	      background-color: white;
+      	      border-left: solid 1px silver;
+      	      border-bottom: solid 1px silver;
+      	      border-right: solid 1px silver;
+      	      */
+      	      
+      	      /*padding: 0 3px 2px 3px;*/
+      	      font-size: 80%;
+      	      text-overflow: ellipsis;
+      	      white-space: nowrap;
+      	      overflow:hidden;
+      }
     </style>
     
     <link href="resources/bootstrap/css/bootstrap.responsive.min.css" rel="stylesheet">
@@ -68,8 +82,11 @@
               			<li <?php if(isset($_GET['action']) && $_GET['action']=='upload') echo 'class="active"';?>><a href="index.php?action=upload">upload</a></li>
               		<?php } ?>
               	<?php } ?>
-              	<?php if( $VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1 )  { ?>
-       			<li <?php if(isset($_GET['action']) && $_GET['action']=='discover') echo 'class="active"';?>><a href="index.php?action=discover">discover</a></li>
+              	<?php if( ($VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1)
+              		||
+              		($VARS->is_set('s_global') && $VARS->get('s_global')==1)
+              		)  { ?>
+       			<li <?php if(isset($_GET['action']) && substr($_GET['action'],0,8)=='discover') echo 'class="active"';?>><a href="index.php?action=discover">discover</a></li>
               	<?php } ?>
               	
               	<?php if(getS('user', 'u_email')==ownStaGramAdmin) { ?>
@@ -155,7 +172,7 @@ echo "</pre>";
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/ownstagram.js"></script>
 
-<?php if(isset($_GET['action']) && ($_GET['action']=='overview' || $_GET['action']=='discover')) { ?>
+<?php if(isset($_GET['action']) && ($_GET['action']=='overview' || $_GET['action']=='discover' || $_GET['action']=='discoverglobal')) { ?>
 <script src="resources/lazyloader.js"></script>
 
        
@@ -183,9 +200,14 @@ $(function() {
             $(".multipleFileLabel").show();
             $(".singleFileLabel").hide();
   }
-  <?php if($VARS->get('s_global_lastcheck')<date("Y-m-d H:i:s", time()-60*60)) { ?>
-  	  setTimeout(function() { ownStaGram.updateGlobal(); }, 5000);
-  <?php } ?>
+  <?php
+  if($VARS->get('s_global')==1) {
+	  if($VARS->get('s_global_lastcheck')<date("Y-m-d H:i:s", time()-60*60)) { ?>
+		  setTimeout(function() { ownStaGram.updateGlobal(); }, 5000);
+	  <?php } else { ?>
+	  	  setTimeout(function() { ownStaGram.getGlobalPix(); }, 5000);
+	  <?php }
+  } ?>
 });
 </script>
 

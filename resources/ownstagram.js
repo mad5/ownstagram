@@ -342,6 +342,19 @@ var ownStaGram = {
 				}
 		});
 	},
+	'getGlobalPix': function() {
+		$.ajax({
+				'url': this.url,
+				'data': {'action': 'getGlobalPix'},
+				'type': 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					if(data.result==1) {
+						
+					}
+				}
+		});
+	},
 	
 	"error": function(msg) {
 		alert(msg);

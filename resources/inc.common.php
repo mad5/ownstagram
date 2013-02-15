@@ -36,9 +36,9 @@ function jump2($action='') {
 	header("location: index.php?action=".$action);
 	exit;
 }
-function blurredZoom($u_fk) {
+function blurredZoom($u_fk=-1) {
 	$zoom = 16;
-	 if(me()<=0) {
+	 if(me()<=0 || $u_fk==-1) {
 		 $zoom = 13;
 	 } else if(me()==$u_fk) {
 	 } else {
@@ -46,8 +46,8 @@ function blurredZoom($u_fk) {
 	 }
 	 return $zoom;
 }
-function blurred($u_fk) {
-	if(me()<=0) {
+function blurred($u_fk=-1) {
+	if(me()<=0 || $u_fk==-1) {
 		 $add = 0.0012*(rand(0,1000)/1000-0.5);
 	 } else if(me()==$u_fk) {
 		 $add = 0;
@@ -340,7 +340,8 @@ class ownStaGram {
 			
 			$data = array('i_u_fk' => (int)$u_pk,
 				'i_date' => now(),
-				'i_file' => $fn
+				'i_file' => $fn,
+				'i_changed' => now()
 			);
 			$pk = $this->DC->insert($data, 'ost_images');
 			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
@@ -367,6 +368,7 @@ class ownStaGram {
 				   "i_lat" => $_POST["lat"],
 				   "i_lng" => $_POST["lng"],
 				   "i_location" => $_POST["location"],
+				   'i_changed' => now()
 				   );
 			$this->DC->update($S, "ost_images", $data['i_pk'], 'i_pk');
 			$res = array("result" => 1);
@@ -425,6 +427,7 @@ class ownStaGram {
 					'i_public' => (int)$_POST['public'],
 					'i_set' => $se_pk,
 					'i_square' => (int)$_POST['format'],
+					'i_changed' => now()
 				);
 			$pk = $this->DC->insert($data, 'ost_images');
 			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
@@ -568,6 +571,7 @@ class ownStaGram {
 				'i_g_fk' => (int)$data['group'],
 				'i_set' => (int)$data['set'],
 				'i_square' => (int)$data['format'],
+				'i_changed' => now()
 				);
 		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}
@@ -774,6 +778,26 @@ class ownStaGram {
 		
 		return $data;
 	}
+	public function getNewPublics($since) {
+		$Q = "SELECT i_location,i_lat,i_lng,i_title,i_date,i_changed,md5(concat(i_file,i_pk,i_date)) as id,md5(concat(i_date,i_file)) as imgid  FROM ost_images WHERE i_public=1 ";
+		$Q .= " AND i_changed>'".addslashes($since)."'  ";
+		$Q .= " ORDER BY i_pk LIMIT 50";
+		$data = $this->DC->getAllByQuery($Q);
+		for($i=0;$i<count($data);$i++) {
+			if($data[$i]['i_lng']!=0) $data[$i]['i_lng'] += blurred();
+			if($data[$i]['i_lat']!=0) $data[$i]['i_lat'] += blurred();
+		}
+		return $data;
+	}
+	
+	public function getPublicRemotes($limit=100) {
+		$Q = "SELECT * FROM ost_global_images
+		INNER JOIN ost_global ON gl_pk=gi_gl_fk
+			WHERE 1 ORDER BY gi_pk DESC LIMIT ".(int)$limit;
+		$data = $this->DC->getAllByQuery($Q);
+		return $data;
+	}
+	
 	public function getOthers($u_pk, $limit=20) {
 		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;
 		$I = $this->DC->getAllByQuery($Q);
@@ -892,7 +916,8 @@ class ownStaGram {
 							"i_file" => $fn,
 							"i_title" => $res["EI"][$j]["title"],
 							"i_key" => md5(uniqid(microtime(true).rand())),
-							"i_square" => 0
+							"i_square" => 0,
+							'i_changed' => now()
 						);
 					$this->DC->insert($data, "ost_images");
 					$count++;
@@ -952,6 +977,59 @@ class ownStaGram {
 		$res = array("result" => 1);
 		return $res;
 		
+	}
+	
+	public function getGlobalPix() {
+		$S = $this->getSettings();
+		$res = array("result" => 0);
+		if($S["s_global"]==1) {
+			$last = $this->DC->getByQuery("SELECT * FROM ost_global WHERE gl_last_checked<'".date("Y-m-d H:i:s", time()-60*60)."' ORDER BY gl_last_checked LIMIT 1");
+			
+			$new = file_get_contents($last['gl_host']."/app.php?action=getGlobalPixNew&host=".urlencode($this->getServerUrl()).'&since='.urlencode($last['gl_last_checked']));
+			
+			$data = json_decode($new, true);
+			
+			if($data['result']==1) {
+				$res = array("result" => 1);
+				
+				for($i=0;$i<count($data['pix']);$i++) {
+					$D = $data['pix'][$i];
+					
+					$new = array(
+						"gi_gl_fk" => $last["gl_pk"],
+						"gi_changed" => $D['i_changed'],
+						"gi_date" => $D['i_date'],
+						"gi_title" => strip_tags($D['i_title']),
+						"gi_location" => strip_tags($D['i_location']),
+						"gi_lat" => $D['i_lat'],
+						"gi_lng" => $D['i_lng'],
+						"gi_id" => $D['id'],
+						"gi_imgid" => $D['imgid'],
+						);
+					$this->DC->insert($new, "ost_global_images");
+					$this->DC->sendQuery("UPDATE ost_global SET gl_last_checked='".addslashes($D['i_changed'])."' WHERE gl_pk='".$last['gl_pk']."' ");
+				}
+				
+			}
+			
+			
+		}
+		
+		
+		return $res;
+	}
+	
+	public function getGlobalPixNew() {
+		$S = $this->getSettings();
+		$res = array("result" => 0);
+		if($S["s_global"]==1) {
+			$res = array("result" => 1, "pix" => array());
+			
+			$res["pix"] = $this->getNewPublics($_GET["since"]);
+			
+			
+		}
+		return $res;
 	}
 }
 

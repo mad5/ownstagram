@@ -102,6 +102,12 @@ switch($_REQUEST['action']) {
 	case 'updateGlobal':
 			$res = $own->updateGlobal();
 			break;
+	case 'getGlobalPix':
+			$res = $own->getGlobalPix();
+			break;
+	case 'getGlobalPixNew':
+			$res = $own->getGlobalPixNew();
+			break;
 	default: 
 			$res = array("result" => 0, "error" => "API-Command unknown!");
 }

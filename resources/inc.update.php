@@ -41,6 +41,9 @@ $UPDATE_SQL[26] = array('type' => 'newtable', 'table' => 'ost_emailin', 'query' 
 $UPDATE_SQL[27] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_global', 'query' => array('ALTER TABLE `ost_settings` ADD `s_global` TINYINT NOT NULL DEFAULT 0 ','ALTER TABLE `ost_settings` ADD `s_global_lastcheck` DATETIME NOT NULL '));
 $UPDATE_SQL[28] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_watermark', 'query' => array('ALTER TABLE `ost_settings` ADD `s_watermark` varchar(50) NOT NULL '));
 $UPDATE_SQL[29] = array('type' => 'newtable', 'table' => 'ost_global', 'query' => 'CREATE TABLE `ost_global` (`gl_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`gl_changed` DATETIME NOT NULL ,`gl_host` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
+$UPDATE_SQL[30] = array('type' => 'newfield', 'table' => 'ost_global', 'field' => 'gl_last_checked', 'query' => array('ALTER TABLE `ost_global` ADD `gl_last_checked` datetime NOT NULL '));
+$UPDATE_SQL[31] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_changed', 'query' => array('ALTER TABLE `ost_images` ADD `i_changed` DATETIME NOT NULL AFTER `i_u_fk`', 'UPDATE ost_images SET i_changed=i_date'));
+$UPDATE_SQL[32] = array('type' => 'newtable', 'table' => 'ost_global_images', 'query' => 'CREATE TABLE `ost_global_images` (`gi_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`gi_gl_fk` BIGINT NOT NULL ,`gi_changed` DATETIME NOT NULL ,`gi_date` DATETIME NOT NULL ,`gi_title` VARCHAR( 255 ) NOT NULL ,`gi_location` VARCHAR( 255 ) NOT NULL ,`gi_lat` DOUBLE NOT NULL ,`gi_lng` DOUBLE NOT NULL ,`gi_id` VARCHAR( 255 ) NOT NULL ,`gi_imgid` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');

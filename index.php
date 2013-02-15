@@ -211,6 +211,11 @@ switch($_GET['action']) {
 		$tplContent->setVariable("list", $list);
 		$html = $tplContent->get('tpl.discover.php');
 		break;
+	case 'discoverglobal':
+		$list = $own->getPublicRemotes(100);
+		$tplContent->setVariable("list", $list);
+		$html = $tplContent->get('tpl.discoverglobal.php');
+		break;
 	
 	case 'delete':
 		if(me()<=0) jump2();

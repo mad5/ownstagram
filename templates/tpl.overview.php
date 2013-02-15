@@ -17,7 +17,10 @@
           		?>
             <div class="span3">
             
-            <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
+		    <?php if($img->get('i_set')==0) { ?>
+		    	    <h3 style='line-height:10px;padding-top:20px;float:left;padding-right:5px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
+		    <?php } ?>
+	            <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
 		    	if($lastDate!=date("d.m.Y", strtotime($img->get('i_date')))) {
 		    		echo date("d.m.Y", strtotime($img->get('i_date')));
 		    		$lastDate = date("d.m.Y", strtotime($img->get('i_date')));
@@ -26,14 +29,12 @@
 		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
 		    	}
 		    ?></h3>
-		    <?php if($img->get('i_set')==0) { ?>
-		    <h3 style='line-height:10px;padding-top:20px;float:right;padding-right:30px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
-		    <?php } ?>
+		    <div style='clear:both;'></div>
 		    
 		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
 		    if($i<9) { ?><img src='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php  
 		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php
-		    } ?></a><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
+		    } ?></a><div class='otitle'><?php echo $img->get('i_title');?></div><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
 		    	<?php if($img->get('i_set')==0) {?><div style='float:left;'><input type=checkbox class='editcheck' value='<?php echo $img->get('id');?>' onclick="ownStaGram.editchecks();" /></div><?php } ?>
 		    	<div style='float:right;padding-right:30px;'>
 				<a href='#' onclick="ownStaGram.rotate('<?php echo $img->get('id');?>', -1);blur();return false;"><img src='resources/ccw.png' border="0" /></a>

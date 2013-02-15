@@ -10,37 +10,23 @@
           	$lastDate = "";
           	$sets = array();
           	foreach($VARS->get('list') as $key => $img) {
-          		if($img->get('i_set')!=0) {
-          			if(in_array($img->get('i_set'), $sets)) continue;
-          			$sets[] = $img->get('i_set');
-          		}
           		?>
             <div class="span3">
             
             <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
-		    	if($lastDate!=date("d.m.Y", strtotime($img->get('i_date')))) {
-		    		echo date("d.m.Y", strtotime($img->get('i_date')));
-		    		$lastDate = date("d.m.Y", strtotime($img->get('i_date')));
+		    	if($lastDate!=date("d.m.Y", strtotime($img->get('gi_date')))) {
+		    		echo date("d.m.Y", strtotime($img->get('gi_date')));
+		    		$lastDate = date("d.m.Y", strtotime($img->get('gi_date')));
 		    	} else {
 		    		#echo "&nbsp;";
-		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
+		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('gi_date')))."</span>";
 		    	}
 		    ?></h3>
 		    <div style='clear:both;'></div>
-		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
-		    if($i<9) { ?><img src='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php  
-		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php
-		    } ?></a><div class='otitle'><?php echo $img->get('i_title');?></div>
-		    <?php if((int)$img->get('views')>0) { ?>
-			    <div style="float:left;font-size:8pt;">
-				<?php echo (int)$img->get('views');?> view<?php if((int)$img->get('views')>1) echo "s";?>
-			    </div>
-		    <?php } ?>
-		    <?php if((int)$img->get('comments')>0) { ?>
-			    <div style="float:right;padding-right:30px;font-size:8pt;">
-				<?php echo (int)$img->get('comments');?> comment<?php if((int)$img->get('comments')>1) echo "s";?>
-			    </div>
-		    <?php } ?>
+		    <a href='#' onclick="openIframe('<?php echo $img->get('gi_id'); ?>');return false;"><?php 
+		    if($i<9) { ?><img src='<?php echo $img->get('gl_host'); ?>/index.php?action=image&img=<?php echo $img->get('gi_imgid'); ?>&w=250' id='img_<?php echo $img->get('gi_id');?>' title="<?php echo $img->get('gi_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
+		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='<?php echo $img->get('gl_host'); ?>/index.php?action=image&img=<?php echo $img->get('gi_imgid'); ?>&w=250' id='img_<?php echo $img->get('gi_id');?>' title="<?php echo $img->get('gi_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
+		    } ?></a><div class='otitle'><?php echo $img->get('gi_title');?></div>
             </div><!--/span-->
           	  <?php
           	  if($i++%4==3) {
@@ -58,8 +44,8 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">where</li>
-              <li class="active"><a href="index.php?action=discover">on this server</a></li>
-              <li class=""><a href="index.php?action=discoverglobal">around the world</a></li>
+              <li class=""><a href="index.php?action=discover">on this server</a></li>
+              <li class="active"><a href="index.php?action=discoverglobal">around the world</a></li>
             </ul>
           </div><!--/.well -->
           
