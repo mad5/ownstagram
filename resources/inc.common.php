@@ -427,17 +427,35 @@ class ownStaGram {
 					'i_public' => (int)$_POST['public'],
 					'i_set' => $se_pk,
 					'i_square' => (int)$_POST['format'],
-					'i_changed' => now()
+					'i_changed' => now(),
+					'i_key' => $this->newImageKey()
 				);
+			
+			
 			$pk = $this->DC->insert($data, 'ost_images');
 			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
-			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
+			#$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']));
+			$res = array("result" => 1, "id" => $data['i_key']);
 			$subnr++;
 		}
 		
 		
 		return $res;
 		                             
+	}
+	
+	private function newImageKey() {
+		$C = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		$len = 5;
+		do {
+			$key = "";
+			for($i=0;$i<$len;$i++) {
+				$key .= substr($C,rand(0,strlen($C)),1);
+			}
+			$Q = "SELECT count(i_pk) FROM  ost_images WHERE i_key='".$key."' ";
+			$test = $this->DC->countByQuery($Q);
+		} while($test>0);
+		return $key;
 	}
 	
 	public function delete($data) {
@@ -546,10 +564,11 @@ class ownStaGram {
 	}
 
 	public function getDetail($id) {
-		$Q = "SELECT ost_images.*,md5(concat(i_file,i_pk,i_date)) as id, ost_user.u_nickname, ost_user.u_country, ost_user.u_city  
+		// md5(concat(i_file,i_pk,i_date))  
+		$Q = "SELECT ost_images.*,i_key as id, ost_user.u_nickname, ost_user.u_country, ost_user.u_city  
 			FROM ost_images 
 			INNER JOIN ost_user ON i_u_fk=u_pk
-			WHERE md5(concat(i_file,i_pk,i_date))='".addslashes($id)."' ";
+			WHERE i_key='".addslashes($id)."' ";
 		$data = $this->DC->getByQuery($Q);
 		return $data;
 	}
@@ -598,7 +617,8 @@ class ownStaGram {
 	}
 	
 	public function getCollected($from) {
-		$Q = "SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *, i_key as id FROM ost_images
 		INNER JOIN ost_views ON v_i_fk=i_pk 
 		WHERE v_u_fk='".(int)$from."' ";
 		$Q .= " ORDER BY i_date DESC ";
@@ -609,7 +629,8 @@ class ownStaGram {
 	}
 	
 	public function getList($from, $filter='') {
-		$Q = "SELECT *, md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".(int)$from."' ";
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *, i_key as id FROM ost_images WHERE i_u_fk='".(int)$from."' ";
 		if($filter=="fav") $Q .= " AND i_star=1 ";
 		$Q .= " ORDER BY i_date DESC ";
 		
@@ -639,13 +660,15 @@ class ownStaGram {
 	}
 	
 	public function getNextImages($data) {
-		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date>'".$data["i_date"]."' ORDER BY i_date LIMIT 3";
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *,i_key as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date>'".$data["i_date"]."' ORDER BY i_date LIMIT 3";
 		$D = $this->DC->getAllByQuery($Q);
 		$D = array_reverse($D);
 		return $D;
 	}
 	public function getPrevImages($data) {
-		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date<'".$data["i_date"]."' ORDER BY i_date DESC LIMIT 3";
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *,i_key as id FROM ost_images WHERE i_u_fk='".$data["i_u_fk"]."' AND i_date<'".$data["i_date"]."' ORDER BY i_date DESC LIMIT 3";
 		$D = $this->DC->getAllByQuery($Q);
 		return $D;
 	}
@@ -744,7 +767,8 @@ class ownStaGram {
 		return $U;
 	}
 	public function getOtherSetImages($set) {
-		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *,i_key as id FROM ost_images
 			INNER JOIN ost_sets ON se_pk=i_set
 			WHERE i_set='".(int)$set."' ORDER BY i_pk "; // LIMIT ".$page.",".$pp;
 		$U = $this->DC->getAllByQuery($Q);
@@ -767,7 +791,8 @@ class ownStaGram {
 	}	
 	
 	public function getPublics($u_pk=0, $limit=20, $order='rand()') {
-		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 ";
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *,i_key as id FROM ost_images WHERE i_public=1 ";
 		$Q .= " AND i_u_fk!='".(int)$u_pk."' AND i_u_fk!='".me()."' ";
 		$Q .= " ORDER BY ".$order." LIMIT ".$limit;
 		$data = $this->DC->getAllByQuery($Q);
@@ -779,7 +804,8 @@ class ownStaGram {
 		return $data;
 	}
 	public function getNewPublics($since) {
-		$Q = "SELECT i_location,i_lat,i_lng,i_title,i_date,i_changed,md5(concat(i_file,i_pk,i_date)) as id,md5(concat(i_date,i_file)) as imgid  FROM ost_images WHERE i_public=1 ";
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT i_location,i_lat,i_lng,i_title,i_date,i_changed,i_key as id,md5(concat(i_date,i_file)) as imgid  FROM ost_images WHERE i_public=1 ";
 		$Q .= " AND i_changed>'".addslashes($since)."'  ";
 		$Q .= " ORDER BY i_pk LIMIT 50";
 		$data = $this->DC->getAllByQuery($Q);
@@ -797,9 +823,20 @@ class ownStaGram {
 		$data = $this->DC->getAllByQuery($Q);
 		return $data;
 	}
+	public function getDetailGlobal($id) {
+		$x = explode('-', $id);
+		$Q = "SELECT * FROM ost_global_images
+			INNER JOIN ost_global ON gl_pk=gi_gl_fk
+			WHERE gi_gl_fk='".(int)$x[0]."'
+			AND gi_id='".addslashes($x[1])."'
+			";
+		$data = $this->DC->getByQuery($Q);
+		return $data;
+	}
 	
 	public function getOthers($u_pk, $limit=20) {
-		$Q = "SELECT *,md5(concat(i_file,i_pk,i_date)) as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;
+		// md5(concat(i_file,i_pk,i_date))
+		$Q = "SELECT *,i_key as id FROM ost_images WHERE i_public=1 AND i_u_fk='".(int)$u_pk."' ORDER BY rand() LIMIT ".(int)$limit;
 		$I = $this->DC->getAllByQuery($Q);
 		return $I;
 	}
@@ -995,6 +1032,13 @@ class ownStaGram {
 				for($i=0;$i<count($data['pix']);$i++) {
 					$D = $data['pix'][$i];
 					
+					$Q = "SELECT * FROM ost_global_images 
+						WHERE gi_gl_fk='".$last["gl_pk"]."'
+						AND gi_id='".$D['id']."'
+						AND gi_imgid='".$D['imgid']."'
+						";
+					$P = $this->DC->getByQuery($Q);
+					
 					$new = array(
 						"gi_gl_fk" => $last["gl_pk"],
 						"gi_changed" => $D['i_changed'],
@@ -1006,7 +1050,12 @@ class ownStaGram {
 						"gi_id" => $D['id'],
 						"gi_imgid" => $D['imgid'],
 						);
-					$this->DC->insert($new, "ost_global_images");
+					
+					if(isset($P['gi_pk'])) {
+						$this->DC->update($new, "ost_global_images", $P['gi_pk'], "gi_pk");
+					} else {
+						$this->DC->insert($new, "ost_global_images");
+					}
 					$this->DC->sendQuery("UPDATE ost_global SET gl_last_checked='".addslashes($D['i_changed'])."' WHERE gl_pk='".$last['gl_pk']."' ");
 				}
 				

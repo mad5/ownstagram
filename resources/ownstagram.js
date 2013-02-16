@@ -365,15 +365,21 @@ var ownStaGram = {
 
 function openIframe(id) {
 	
+	var action = 'detail';
+	if(id.substr(0,1)=='-') {
+		id = id.substr(1);
+		action = 'detailglobal';
+	}
+	
 	$('#osmMap').hide();
 	
 	var h1 = $('.navbar').height();
 	var h2 = $(window).height();
 	var html = '<div id="detailiframe" style="position:absolute;top:'+($(window).scrollTop())+'px;left:0;width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;">';
-	html += '<iframe src="index.php?hide=1&action=detail&id='+id+'" style="width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;" border=0 frameborder=0>';
+	html += '<iframe src="index.php?if=1&action='+action+'&id='+id+'" style="width:'+$(window).width()+'px;height:'+($(document).height()-h1)+'px;" border=0 frameborder=0>';
 	html += '</iframe></div>';
 	
-	history.pushState({ }, "Details", "index.php?action=detail&id="+id);
+	history.pushState({ }, "Details", "index.php?action="+action+"&id="+id);
 	
 	window.onpopstate = function(event) {
 		var L = window.location+"";

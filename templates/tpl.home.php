@@ -68,6 +68,20 @@
 		  </div><!--/row-->
 		  
 		  <br/><br/>
+
+		  <div class="row-fluid">
+		    <div class="span4">
+		    	<h2>Global distribution</h2>
+		    	<p>
+		    	connect your ownStaGram-host with all others around the world.
+		    	Discover pictures taken and hosted by others.
+		    	Keep full control about your photos on your server.
+		    	set a watermark for all public shown pictures.
+		    	</p>
+		    </div><!--/span-->
+		  </div><!--/row-->
+		  
+		  <br/><br/>
 		  
 		  <div class="row-fluid">
 		    <div class="span4">

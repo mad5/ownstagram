@@ -44,7 +44,7 @@
 <body>
 
 <?php if(!isset($_GET["hide"])) { ?>
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-fixed-top" id='navbartopdiv'>
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -85,6 +85,7 @@
               	<?php if( ($VARS->is_set('s_allowfriendsstreams') && $VARS->get('s_allowfriendsstreams')==1)
               		||
               		($VARS->is_set('s_global') && $VARS->get('s_global')==1)
+              		|| 1==1
               		)  { ?>
        			<li <?php if(isset($_GET['action']) && substr($_GET['action'],0,8)=='discover') echo 'class="active"';?>><a href="index.php?action=discover">discover</a></li>
               	<?php } ?>
@@ -208,6 +209,10 @@ $(function() {
 	  	  setTimeout(function() { ownStaGram.getGlobalPix(); }, 5000);
 	  <?php }
   } ?>
+  
+  if ( window.self === window.top ) {  } else { $('#navbartopdiv').remove(); }
+  
+  
 });
 </script>
 

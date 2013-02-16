@@ -23,7 +23,7 @@
 		    	}
 		    ?></h3>
 		    <div style='clear:both;'></div>
-		    <a href='#' onclick="openIframe('<?php echo $img->get('gi_id'); ?>');return false;"><?php 
+		    <a href='#' onclick="openIframe('-<?php echo $img->get('gi_gl_fk'); ?>-<?php echo $img->get('gi_id'); ?>');return false;"><?php 
 		    if($i<9) { ?><img src='<?php echo $img->get('gl_host'); ?>/index.php?action=image&img=<?php echo $img->get('gi_imgid'); ?>&w=250' id='img_<?php echo $img->get('gi_id');?>' title="<?php echo $img->get('gi_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php  
 		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='<?php echo $img->get('gl_host'); ?>/index.php?action=image&img=<?php echo $img->get('gi_imgid'); ?>&w=250' id='img_<?php echo $img->get('gi_id');?>' title="<?php echo $img->get('gi_title');?>" style="border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;" border="0" height="250" width="250" /><?php
 		    } ?></a><div class='otitle'><?php echo $img->get('gi_title');?></div>
@@ -79,9 +79,9 @@
 				var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 				var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
 				<?php foreach($VARS->get('list') as $key => $img) {
-					if($img->get('i_lng')==0) continue;
+					if($img->get('gi_lng')==0) continue;
 					?>
-					markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $img->get('i_lng')+blurred($img->get('i_u_fk'));?>,<?php echo $img->get('i_lat')+blurred($img->get('i_u_fk'));?>).transform( fromProjection, toProjection),icon.clone()));
+					markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $img->get('gi_lng');?>,<?php echo $img->get('gi_lat');?>).transform( fromProjection, toProjection),icon.clone()));
 				<?php } ?>
 				var bounds = markers.getDataExtent();
 				map.zoomToExtent(bounds);

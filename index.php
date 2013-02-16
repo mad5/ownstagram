@@ -227,7 +227,17 @@ switch($_GET['action']) {
 		} else {
 			die("no access!");
 		}
+		break;
+	case 'detailglobal':
 		
+		$data = $own->getDetailGlobal($_GET['id']);
+		$tpl->setVariable("detailtitle", $data['gi_title']." @ ");
+		
+		$tplContent->setVariable($data);
+		$tplContent->setVariable("imgsrc", $data['gl_host'].'/index.php?action=image&img='.$data['gi_imgid'].'&w=500');
+		
+		$html = $tplContent->get('tpl.detailglobal.php');
+		break;
 	case 'detail':
 		if(isset($_POST['savesettings']) && $_POST['savesettings']==1) {
 			$own->updateDetails($_GET['id'], $_POST);

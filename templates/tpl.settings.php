@@ -124,7 +124,7 @@
 <div class="span3">
 
 	<div class="form-signin">
-		<h2 class="form-signin-heading">global</h2>
+		<h2 class="form-signin-heading">global distribution</h2>
 		<p>
 			all ownStaGram-instances can be connected together. 
 			You can be part of the global community to share your photos with others and explore photos from around the world.
@@ -135,6 +135,12 @@
 			<input type='checkbox' value="1" name="setting_global_active" class="settingform" <?php echo ($VARS->is_set('s_global') && $VARS->get('s_global')==1 ? 'checked' : '');?> /> connect my host with all others
 			<br/><br/>
 			It might be a good idea to set a watermark which will be provided with every picture shown in a public environment.
+			<br/><br/>
+			If you activate this checkbox your hostname will be send to http://www.ownstagram.de. 
+			Now all other ownStaGram-instances can get your hostname and check if there are new public pictures.
+			You pictures will be embedded into the other site, but <b>not</b> transfered to the other server.
+			To display your photo into the other ownStaGram, your picture will be retrieved into the viewers browser from your server each time someone displays it.
+			<b>Your photos belong to you!</b>
 		</p>
 	</div>
 	
