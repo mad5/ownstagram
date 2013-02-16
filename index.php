@@ -1,4 +1,14 @@
 <?php
+if(!file_Exists(dirname(__FILE__).'/inc.var.php')) {
+	echo "to run ownStaGram follow these few steps:<br/><br/>";
+	echo "1) create a new database and set user permissions.<br/><br/>";
+	echo "2) rename <i>inc.var.php.dist</i> to <i>inc.var.php</i> and set database-credentials.<br/><br/>";
+	echo "3) change line <i>define('ownStaGramAdmin', 'mailSender@example.com');</i> to your prefered email-address.<br/><br/>";
+	echo "4) make data-folder writable for apache/php.<br/><br/>";
+	echo "5) reload this page and register with the emailaddress you set as ownStaGramAdmin.<br/><br/>";
+	exit;
+}
+
 define('projectPath', dirname(__FILE__));
 #error_reporting(-1);ini_set('display_errors', 'on');
 error_reporting(-1);ini_set('display_errors', 'on');
