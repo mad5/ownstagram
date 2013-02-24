@@ -14,6 +14,11 @@ define('projectPath', dirname(__FILE__));
 error_reporting(-1);ini_set('display_errors', 'on');
 include_once 'resources/inc.common.php';
 
+if(isset($_GET['O'])) {
+	$_REQUEST["action"] = $_GET["action"] = "detail";
+	$_REQUEST["id"] = $_GET["id"] = $_GET["O"];
+}
+
 $settings = $own->getSettings();
 
 $tpl = new template();
@@ -196,6 +201,12 @@ switch($_GET['action']) {
 					$new = array(
 						'i_set' => (int)$_POST['set']
 					);
+					if(isset($_POST['public']) && $_POST['public']!=-999) {
+						$new['i_public'] = (int)$_POST['public'];
+					}
+					if(isset($_POST['newdate']) && $_POST['newdate']!="") {
+						$new['i_date'] = date("Y-m-d", strtotime($_POST['newdate']));
+					}
 					$own->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 				}
 			}
@@ -225,6 +236,24 @@ switch($_GET['action']) {
 		$list = $own->getPublicRemotes(100);
 		$tplContent->setVariable("list", $list);
 		$html = $tplContent->get('tpl.discoverglobal.php');
+		break;
+	
+	case 'discoverflickr':
+		$rss = file_get_contents('http://api.flickr.com/services/feeds/photos_public.gne');
+		$rss = str_nach($rss, '<entry>');
+		$entry = explode('</entry>', $rss);
+		$list = array();
+		for($i=0;$i<count($entry)-1;$i++) {
+			$L = array();
+			$L['gi_title'] = str_zwischen($entry[$i], '<title>', '</title>');
+			$L['gi_date'] = str_zwischen($entry[$i], '<published>', '</published>');
+			$L['gl_url'] = str_zwischen($entry[$i], '<published>', '</published>');
+			$L['gl_content'] = htmlspecialchars_decode(str_zwischen($entry[$i], '<content type="html">', '</content>'));
+			$L['gl_content'] = str_replace('<a href', '<a target=_blank href', $L['gl_content']);
+			$list[] = $L;
+		}
+		$tplContent->setVariable("list", $list);
+		$html = $tplContent->get('tpl.discoverflickr.php');
 		break;
 	
 	case 'delete':
@@ -259,9 +288,7 @@ switch($_GET['action']) {
 			exit;
 		}
 			
-		if(me()>0 && me()!=$data['i_u_fk'] && getS('user', 'u_email')!=ownStaGramAdmin) {
-			$own->hitPhoto(me(), $data);
-		}
+		$own->hitPhoto(me(), $data);
 		
 		if(me()>0 && me()==$data['i_u_fk']) {
 			$next = $own->getNextImages($data);

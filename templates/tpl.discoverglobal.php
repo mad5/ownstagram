@@ -46,7 +46,8 @@
               <li class="nav-header">where</li>
               <li class=""><a href="index.php?action=discover">on this server</a></li>
               <li class="active"><a href="index.php?action=discoverglobal">around the world</a></li>
-            </ul>
+              <li class=""><a href="index.php?action=discoverflickr">newest on flickr</a></li>
+             </ul>
           </div><!--/.well -->
           
           

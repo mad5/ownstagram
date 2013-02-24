@@ -73,6 +73,9 @@
 				  <fieldset>
 					<legend>Photo-settings</legend>
 					
+					<label>Date</label>
+					<input type="text" name="date" value="<?php echo $VARS->get('i_date'); ?>" placeholder="YYYY-mm-dd">
+					
 					<label>Title</label>
 					<input type="text" name="title" value="<?php echo $VARS->get('i_title'); ?>" placeholder="Photo title">
 					

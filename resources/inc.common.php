@@ -57,6 +57,22 @@ function blurred($u_fk=-1) {
 	 return $add;
 }
 
+function str_bis($haystack, $needle) {
+	$s = substr($haystack, 0, strpos($haystack, $needle) );
+	return($s);
+}
+
+function str_nach($haystack, $needle) {
+	$s = substr($haystack, strpos($haystack, $needle)+strlen($needle) );
+	return($s);
+}
+
+function str_zwischen($haystack, $needle1, $needle2) {
+	$s = str_nach($haystack, $needle1);
+	$s = str_bis($s, $needle2);
+	return($s);
+}
+
 class ownStaGram {
 	public $DC;
 	public $VERSION = "1.9.7";
@@ -339,9 +355,11 @@ class ownStaGram {
 			file_put_contents("data/".$fn, $M);
 			
 			$data = array('i_u_fk' => (int)$u_pk,
+				'i_created' => now(),
 				'i_date' => now(),
 				'i_file' => $fn,
-				'i_changed' => now()
+				'i_changed' => now(),
+				'i_key' => $this->newImageKey()
 			);
 			$pk = $this->DC->insert($data, 'ost_images');
 			$this->DC->sendQuery("UPDATE ost_images SET i_key=md5(concat(i_file,i_pk,i_date)) WHERE i_key='' ");
@@ -354,7 +372,7 @@ class ownStaGram {
 						);
 			}
 			
-			$res = array("result" => 1, "id" => md5($fn.$pk.$data['i_date']), "imgid" => md5($data['i_date'].$data['i_file']), "groups" => $G2 );
+			$res = array("result" => 1, "id" => $data["i_key"], "imgid" => md5($data['i_date'].$data['i_file']), "groups" => $G2 );
 			return $res;
 		}
 	}
@@ -420,8 +438,15 @@ class ownStaGram {
 				$T .= ($subnr>0 ? ' ('.$subnr.')' : '');
 			}
 			
+			$datum = now();
+			
+			/*$datum = substr($files['img']['name'][$i],0,8);
+			$datum = substr($datum,0,4)."-".substr($datum,4,2)."-".substr($datum,6,2);*/
+			
+			
 			$data = array('i_u_fk' => (int)$u_pk,
-					'i_date' => now(),
+					'i_created' => $datum,
+					'i_date' => $datum,
 					'i_file' => $fn,
 					'i_title' => htmlspecialchars(stripslashes($T)),
 					'i_public' => (int)$_POST['public'],
@@ -584,6 +609,7 @@ class ownStaGram {
 		}
 		
 		$new = array(
+				'i_date' => date("Y-m-d", strtotime($data['date'])),
 				'i_title' => htmlspecialchars(stripslashes($data['title'])),
 				'i_location' => htmlspecialchars(stripslashes($data['location'])),
 				'i_public' => (int)$data['public'],
@@ -595,14 +621,22 @@ class ownStaGram {
 		$this->DC->update($new, "ost_images", $detail["i_pk"], "i_pk");
 	}
 	public function hitPhoto($u_fk, $data) {
-		$Q = "SELECT * FROM ost_views WHERE v_u_fk='".(int)$u_fk."' AND v_i_fk='".(int)$data["i_pk"]."' ";
-		$V = $this->DC->getByQuery($Q);
-		if($V=="") {
-			$V = array("v_u_fk" => (int)$u_fk,
-				   "v_i_fk" => (int)$data['i_pk'],
-				   "v_date" => date("Y-m-d H:i:s")
-				   );
-			$this->DC->insert($V, "ost_views");
+		
+		if(me()==0) {
+			$this->DC->sendQuery("UPDATE ost_images SET i_views=i_views+1 WHERE i_pk='".(int)$data['i_pk']."' ");
+		}
+		if(me()>0 && me()!=$data['i_u_fk'] && getS('user', 'u_email')!=ownStaGramAdmin) {
+
+			$Q = "SELECT * FROM ost_views WHERE v_u_fk='".(int)$u_fk."' AND v_i_fk='".(int)$data["i_pk"]."' ";
+			$V = $this->DC->getByQuery($Q);
+			if($V=="") {
+				$V = array("v_u_fk" => (int)$u_fk,
+					   "v_i_fk" => (int)$data['i_pk'],
+					   "v_date" => date("Y-m-d H:i:s")
+					   );
+				$this->DC->insert($V, "ost_views");
+			}
+			
 		}
 	}
 	
@@ -949,10 +983,11 @@ class ownStaGram {
 					file_put_contents(projectPath.'/data/'.$fn, $img);
 					
 					$data = array("i_u_fk" => $P['u_pk'],
+							'i_created' => $res["EI"][$j]["imagedate"],
 							"i_date" => $res["EI"][$j]["imagedate"],
 							"i_file" => $fn,
 							"i_title" => $res["EI"][$j]["title"],
-							"i_key" => md5(uniqid(microtime(true).rand())),
+							"i_key" => $this->newImageKey(),
 							"i_square" => 0,
 							'i_changed' => now()
 						);

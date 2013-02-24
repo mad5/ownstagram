@@ -31,7 +31,7 @@
 		    ?></h3>
 		    <div style='clear:both;'></div>
 		    
-		    <a href='index.php?action=detail&id=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
+		    <a href='index.php?O=<?php echo $img->get('id');?>' onclick="openIframe('<?php echo $img->get('id'); ?>');return false;"><?php 
 		    if($i<9) { ?><img src='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php  
 		    } else { ?><img src="resources/ownstagram.jpg" class="lazy" imgsrc='index.php?action=image<?php echo ($img->get('i_set')!=0 ? '&set=1' : '');?>&img=<?php echo md5($img->get('i_date').$img->get('i_file')); ?>&w=250' id='img_<?php echo $img->get('id');?>' title="<?php echo $img->get('i_title');?>" style="<?php if($img->get('i_set')==0) { ?>border:solid 1px silver;box-shadow:0 10px 18px -10px #888888;border-radius:3px;<?php } ?>" border="0" height="250" width="250" /><?php
 		    } ?></a><div class='otitle'><?php echo $img->get('i_title');?></div><?php if($img->get('i_u_fk')==me()) { ?><div style='display:none;' class='imgedit'>
@@ -113,7 +113,28 @@
 		<div style='display:none;' id='newset'>
 			<label>new set:</label>
 			<input type="text" name="newsetname" value="" placeholder="new set name">
-		</div>              	
+		</div>             
+		
+		
+		<label>Visibility</label>
+		<label class="checkbox">
+			<input type="radio" name="public" value="-999" checked /> no changes to selected photos<br/>
+		</label>		
+		<label class="checkbox">
+			<input type="radio" name="public" value="0" /> show picture if url is known<br/>
+		</label>
+		<label class="checkbox">
+			<input type="radio" name="public" value="1" /> make picture public<br/>
+		</label>
+		<label class="checkbox">
+			<input type="radio" name="public" value="-1" /> make picture private<br/>
+		</label>	
+
+		<label>set new Date<label>
+		<input type="text" name="newdate" value="" placeholder="YYYY-mm-dd">
+		
+		<br/>
+		
 		<input type="submit" value='ok'>
 		</form>
               	
@@ -147,10 +168,28 @@
 				var size = new OpenLayers.Size(21,25);
 				var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 				var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
+				var im = 0;
+				var M = new Array();
 				<?php foreach($VARS->get('list') as $key => $img) {
 					if($img->get('i_lng')==0) continue;
 					?>
-					markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $img->get('i_lng')+blurred($img->get('i_u_fk'));?>,<?php echo $img->get('i_lat')+blurred($img->get('i_u_fk'));?>).transform( fromProjection, toProjection),icon.clone()));
+					M[im] = new OpenLayers.Marker(new OpenLayers.LonLat(<?php echo $img->get('i_lng')+blurred($img->get('i_u_fk'));?>,<?php echo $img->get('i_lat')+blurred($img->get('i_u_fk'));?>).transform( fromProjection, toProjection),icon.clone());
+					M[im].id = '<?php echo $img->get('id'); ?>';
+					M[im].events.register(
+						"mousedown", 
+						M[im],
+						(function(ii) {
+								return function() {
+									//AddPopup(M[ii].id);
+									//alert(M[ii].id);
+									openIframe(M[ii].id);
+								}
+						})(im)
+						);
+         				
+					markers.addMarker(M[im]);
+					im++;
+					
 				<?php } ?>
 				var bounds = markers.getDataExtent();
 				map.zoomToExtent(bounds);

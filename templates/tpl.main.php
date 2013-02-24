@@ -205,6 +205,7 @@ $(function() {
   if($VARS->get('s_global')==1) {
 	  if($VARS->get('s_global_lastcheck')<date("Y-m-d H:i:s", time()-60*60)) { ?>
 		  setTimeout(function() { ownStaGram.updateGlobal(); }, 5000);
+		  setTimeout(function() { ownStaGram.getGlobalPix(); }, 15000);
 	  <?php } else { ?>
 	  	  setTimeout(function() { ownStaGram.getGlobalPix(); }, 5000);
 	  <?php }
