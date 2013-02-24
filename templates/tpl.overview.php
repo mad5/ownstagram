@@ -180,8 +180,6 @@
 						M[im],
 						(function(ii) {
 								return function() {
-									//AddPopup(M[ii].id);
-									//alert(M[ii].id);
 									openIframe(M[ii].id);
 								}
 						})(im)
