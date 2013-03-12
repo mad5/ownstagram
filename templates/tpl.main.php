@@ -19,7 +19,7 @@
       #osmMap .olControlAttribution {
       	      bottom: 0;
       }
-      .form-signin div, .form-signin label, .form-signin p {
+      .form-signin, .form-signin div, .form-signin label, .form-signin p {
       	       color: gray;
       }
       .otitle {

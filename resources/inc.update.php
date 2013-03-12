@@ -1,15 +1,8 @@
 <?php
 $UPDATE_SQL = array();
 /*
-$UPDATE_SQL[0] = array('type' => 'newfield', 'table' => 'co_groups', 'field' => 'cg_closed', 'query' => 'ALTER TABLE  `co_groups` ADD  `cg_closed` TINYINT NOT NULL');
-$UPDATE_SQL[2] = array('type' => 'newtable', 'table' => 'co_groups_apps', 'query' => 'CREATE TABLE `co_groups_apps` (`ga_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`ga_cg_fk` BIGINT NOT NULL ,`ga_ca_fk` BIGINT NOT NULL) ENGINE = MYISAM');
-$UPDATE_SQL[21] = array('type' => 'newentry', 'countquery' => "SELECT count(*) FROM co_apps WHERE ca_id='zuweisen'", 'query'=>"INSERT INTO `co_apps` (`ca_fe_fk`, `ca_id`, `ca_title`, `ca_url`, `ca_url_groupapp`, `ca_publisher_url`, `ca_head`, `ca_type`, `ca_key`, `ca_info`, `ca_masterapp`) VALUES ( 1, 'zuweisen', 'Zuweisen', 'apps/app.zuweisen.php?action=anzeigealle', 'apps/app.zuweisen.php?action=anzeigegruppe', 'apps/app.zuweisen.php?action=zuweisen', '', 'display', '02fba780f8d1d6f8ec1ff76027d88d5e', 'Einen Artikel einer oder mehreren Personen zuweisen.', 0);");
-$UPDATE_SQL[22] = array('type' => 'alter', 'query' => "ALTER TABLE `fe_user` CHANGE `fe_type` `fe_type` ENUM( 'user', 'app', 'group', 'cron' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'user'");
-
 callAfter um nach SQL noch eine Funktion aufzurufen
-
-
- */
+*/
 
 $UPDATE_SQL[0] = array('type' => 'newfield', 'table' => 'ost_settings', 'field' => 's_welcometext', 'query' => 'ALTER TABLE `ost_settings` ADD `s_welcometext` TEXT NOT NULL ');
 $UPDATE_SQL[1] = array('type' => 'newtable', 'table' => 'ost_views', 'query' => 'CREATE TABLE IF NOT EXISTS `ost_views` (  `v_pk` bigint(20) NOT NULL AUTO_INCREMENT, `v_u_fk` bigint(20) NOT NULL,  `v_i_fk` bigint(20) NOT NULL, `v_date` datetime NOT NULL,   PRIMARY KEY (`v_pk`),  KEY `v_u_fk` (`v_u_fk`,`v_i_fk`) ) ENGINE=InnoDB ');
@@ -46,6 +39,7 @@ $UPDATE_SQL[31] = array('type' => 'newfield', 'table' => 'ost_images', 'field' =
 $UPDATE_SQL[32] = array('type' => 'newtable', 'table' => 'ost_global_images', 'query' => 'CREATE TABLE `ost_global_images` (`gi_pk` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`gi_gl_fk` BIGINT NOT NULL ,`gi_changed` DATETIME NOT NULL ,`gi_date` DATETIME NOT NULL ,`gi_title` VARCHAR( 255 ) NOT NULL ,`gi_location` VARCHAR( 255 ) NOT NULL ,`gi_lat` DOUBLE NOT NULL ,`gi_lng` DOUBLE NOT NULL ,`gi_id` VARCHAR( 255 ) NOT NULL ,`gi_imgid` VARCHAR( 255 ) NOT NULL) ENGINE = InnoDB');
 $UPDATE_SQL[33] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_views', 'query' => array('ALTER TABLE `ost_images` ADD `i_views` bigint(20) NOT NULL'));
 $UPDATE_SQL[34] = array('type' => 'newfield', 'table' => 'ost_images', 'field' => 'i_created', 'query' => array('ALTER TABLE `ost_images` ADD `i_created` DATETIME NOT NULL AFTER `i_u_fk`', 'UPDATE ost_images SET i_created=i_date', 'ALTER TABLE `ost_images` CHANGE `i_date` `i_date` DATE NOT NULL '));
+$UPDATE_SQL[35] = array('type' => 'alter', 'query' => array("TRUNCATE TABLE ost_global_images", "UPDATE ost_global SET gl_last_checked='0000-00-00 00:00:00' "));
 
 $STEP = -1;
 if(file_exists($update_fn.'.count')) $STEP = file_get_contents($update_fn.'.count');
