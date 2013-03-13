@@ -18,12 +18,12 @@
             <div class="span3">
             
             <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
-		    	if($lastDate!=date("d.m.Y", strtotime($img->get('i_date')))) {
-		    		echo date("d.m.Y", strtotime($img->get('i_date')));
-		    		$lastDate = date("d.m.Y", strtotime($img->get('i_date')));
+		    	if($lastDate!=date("Y-m-d", strtotime($img->get('i_date')))) {
+		    		echo date("Y-m-d", strtotime($img->get('i_date')));
+		    		$lastDate = date("Y-m-d", strtotime($img->get('i_date')));
 		    	} else {
 		    		#echo "&nbsp;";
-		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
+		    		echo "<span style='color: #efefef;'>".date("Y-m-d", strtotime($img->get('i_date')))."</span>";
 		    	}
 		    ?></h3>
 		    <div style='clear:both;'></div>

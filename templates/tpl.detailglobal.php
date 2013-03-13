@@ -33,7 +33,7 @@
         <div class="hero-unit" style="padding-top:15px;padding-bottom:20px;">
 		  
 		  <div style="float:left;">
-			<h2><?php echo date("d.m.Y", strtotime($VARS->get('gi_date')));?></h2>
+			<h2><?php echo date("Y-m-d", strtotime($VARS->get('gi_date')));?></h2>
 		  </div>
 		  
 		  

@@ -163,7 +163,7 @@
         <div class="hero-unit" style="padding-top:15px;padding-bottom:20px;">
 		  
 		  <div style="float:left;">
-			<h2><?php echo date("d.m.Y", strtotime($VARS->get('i_date')));?></h2>
+			<h2><?php echo date("Y-m-d", strtotime($VARS->get('i_date')));?></h2>
 		  </div>
 		  
 		  <?php if(me()==$VARS->get('i_u_fk') && $VARS->get('i_set')==0) { ?>
@@ -250,7 +250,7 @@
               	      	     <i title="comment from other" class="icon-align-justify"></i>
               	      <?php }?>
               	      	<?php echo $comment->get("co_comment"); ?>
-              	      	<br/><span class='date'><small><?php echo date("d.m.Y H:i:s", strtotime($comment->get("co_date"))); ?></small></span>
+              	      	<br/><span class='date'><small><?php echo date("Y-m-d H:i:s", strtotime($comment->get("co_date"))); ?></small></span>
               	      </p>
               <?php } ?>
              

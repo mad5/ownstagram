@@ -21,12 +21,12 @@
 		    	    <h3 style='line-height:10px;padding-top:20px;float:left;padding-right:5px;'><div style='position:relative;top:5px;height:1px;'><a href='#' onclick="ownStaGram.star('<?php echo $img->get('id');?>', this);blur();return false;"><img rel='<?php echo $img->get('i_star'); ?>' src='resources/fav<?php echo $img->get('i_star'); ?>.png' border="0" /></a></div></h3>
 		    <?php } ?>
 	            <h3 style='line-height:10px;padding-top:20px;float:left;'><?php
-		    	if($lastDate!=date("d.m.Y", strtotime($img->get('i_date')))) {
-		    		echo date("d.m.Y", strtotime($img->get('i_date')));
-		    		$lastDate = date("d.m.Y", strtotime($img->get('i_date')));
+		    	if($lastDate!=date("Y-m-d", strtotime($img->get('i_date')))) {
+		    		echo date("Y-m-d", strtotime($img->get('i_date')));
+		    		$lastDate = date("Y-m-d", strtotime($img->get('i_date')));
 		    	} else {
 		    		#echo "&nbsp;";
-		    		echo "<span style='color: #efefef;'>".date("d.m.Y", strtotime($img->get('i_date')))."</span>";
+		    		echo "<span style='color: #efefef;'>".date("Y-m-d", strtotime($img->get('i_date')))."</span>";
 		    	}
 		    ?></h3>
 		    <div style='clear:both;'></div>
