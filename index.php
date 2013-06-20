@@ -10,10 +10,13 @@ if(!file_Exists(dirname(__FILE__).'/inc.var.php')) {
 }
 
 define('projectPath', dirname(__FILE__));
-#error_reporting(-1);ini_set('display_errors', 'on');
-error_reporting(-1);ini_set('display_errors', 'on');
 include_once 'resources/inc.common.php';
-
+error_reporting(-1);
+if(!defined('DEBUGMODE') || !DEBUGMODE) {
+    ini_set('display_errors', 'off'); //Debugmode disabled
+} else {
+    ini_set('display_errors','on'); //Debugmode enabled
+}
 if(isset($_GET['O'])) {
 	$_REQUEST["action"] = $_GET["action"] = "detail";
 	$_REQUEST["id"] = $_GET["id"] = $_GET["O"];
