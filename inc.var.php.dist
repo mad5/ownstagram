@@ -5,6 +5,8 @@ define('DB_PASS', 'DBPASSWORT');
 define('DB_NAME', 'DATABSE');
 define('DB_CHARACTERSET', 'utf8');
 
+define('DEBUGMODE','false');
+
 define('MailSender', 'mailSender@example.com');
 
 define('ownStaGramAdmin', 'mailSender@example.com');
